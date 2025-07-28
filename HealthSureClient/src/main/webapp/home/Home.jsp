@@ -7,7 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to HMS</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/home.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
 </head>
 
 <body class="light-mode">
@@ -229,25 +231,47 @@
 	
 	    <div class="contact-card-container">
 	        <!-- Contact Form -->
-	        <form class="contact-form-glass">
-	            <div class="form-group">
-	                <i class="fas fa-user"></i>
-	                <input type="text" placeholder="Your Name" required />
-	            </div>
-	            <div class="form-group">
-	                <i class="fas fa-envelope"></i>
-	                <input type="email" placeholder="Your Email" required />
-	            </div>
-	            <div class="form-group">
-	                <i class="fas fa-heading"></i>
-	                <input type="text" placeholder="Subject" required />
-	            </div>
-	            <div class="form-group">
-	                <i class="fas fa-comment"></i>
-	                <textarea rows="4" placeholder="Your Message" required></textarea>
-	            </div>
-	            <button type="submit" class="send-button">Send Message</button>
-	        </form>
+	        <h:form styleClass="contact-form-glass">
+				    <!-- 👤 Name -->
+				    <div class="form-group">
+				        <i class="fas fa-user"></i>
+				        <label for="name" class="input-label">Your Name <span style="color: #dc2626;">*</span></label>
+				        <h:inputText id="name" value="#{contactBean.name}" required="true" styleClass="input" />
+				        <h:message for="name" style="color:red; font-size:12px;" />
+				    </div>
+				
+				    <!-- 📧 Email -->
+				    <div class="form-group">
+				        <i class="fas fa-envelope"></i>
+				        <label for="email" class="input-label">Your Email <span style="color: #dc2626;">*</span></label>
+				        <h:inputText id="email" value="#{contactBean.email}" required="true" styleClass="input" />
+				        <h:message for="email" style="color:red; font-size:12px;" />
+				    </div>
+				
+				    <!-- 📝 Subject -->
+				    <div class="form-group">
+				        <i class="fas fa-heading"></i>
+				        <label for="subject" class="input-label">Subject <span style="color: #dc2626;">*</span></label>
+				        <h:inputText id="subject" value="#{contactBean.subject}" required="true" styleClass="input" />
+				        <h:message for="subject" style="color:red; font-size:12px;" />
+				    </div>
+				
+				    <!-- 💬 Message -->
+				    <div class="form-group">
+				        <i class="fas fa-comment"></i>
+				        <label for="message" class="input-label">Your Message <span style="color: #dc2626;">*</span></label>
+				        <h:inputTextarea id="message" value="#{contactBean.message}" rows="4" required="true" styleClass="input" />
+				        <h:message for="message" style="color:red; font-size:12px;" />
+				    </div>
+				
+				    <!-- 🚀 Submit Button -->
+				    <h:commandButton value="Send Message" action="#{contactBean.sendEmail}" styleClass="send-button" />
+				
+				    <!-- 🔔 Global Messages -->
+				    <h:messages globalOnly="true" style="color: green; font-size: 14px;" />
+				
+				</h:form>
+
 	
 	        <!-- Info Card -->
 	        <div class="contact-info-glass">
@@ -259,6 +283,7 @@
 	        </div>
 	    </div>
 	</section>
+    
 
 
 </f:view>

@@ -39,18 +39,6 @@
             </ul>
         </div>
 
-        <!-- Role-Based Menus -->
-        <div class="footer-links">
-            <b>For Users</b>
-            <ul>
-                <li><a href="providerDashboard.jsf">Providers</a></li>
-                <li><a href="recipientDashboard.jsf">Recipients</a></li>
-                <li><a href="insuranceHome.jsf">Insurance</a></li>
-                <li><a href="pharmacyHome.jsf">Pharmacy</a></li>
-                <li><a href="adminDashboard.jsf">Admin</a></li>
-            </ul>
-        </div>
-
         <!-- Contact Info -->
         <div class="footer-contact">
             <b>Contact Us</b>
