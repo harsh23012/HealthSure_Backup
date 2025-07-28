@@ -1,0 +1,45 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
+<%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Insurance Claim Portal</title>
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ClaimActions.css" />
+</head>
+<body>
+<f:view>
+
+    <!-- 🔗 Navbar -->
+    <jsp:include page="/navbar/NavProvider.jsp" />
+
+    <!-- 📦 Main Container -->
+    <div class="actions-container">
+        <h1 class="page-heading">Insurance Claim Center</h1>
+        <h:form>
+            <div class="action-buttons">
+                <h:commandButton value="File Insurance Claim"
+                                 action="#{claimController.fileClaim}"
+                                 styleClass="action-btn" />
+
+                <h:commandButton value="Update Insurance Claim"
+                                 action="#{claimController.updateClaim}"
+                                 styleClass="action-btn" />
+
+                <h:commandButton value="Claims History"
+                                 action="#{claimController.viewClaimHistory}"
+                                 styleClass="action-btn" />
+
+                <h:commandButton value="Payment Records"
+                                 action="#{claimController.viewPaymentRecords}"
+                                 styleClass="action-btn" />
+            </div>
+        </h:form>
+    </div>
+
+    <!-- 📎 Footer -->
+    <jsp:include page="/footer/Footer.jsp" />
+
+</f:view>
+</body>
+</html>

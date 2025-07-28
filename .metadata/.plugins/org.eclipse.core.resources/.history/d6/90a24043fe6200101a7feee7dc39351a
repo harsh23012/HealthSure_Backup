@@ -1,0 +1,35 @@
+package com.infinite.jsf.provider.dao;
+
+import java.util.List;
+
+import com.infinite.jsf.insurance.model.InsuranceCompany;
+import com.infinite.jsf.insurance.model.InsuranceCoverageOption;
+import com.infinite.jsf.insurance.model.InsurancePlan;
+import com.infinite.jsf.insurance.model.Subscribe;
+import com.infinite.jsf.provider.dto.PendingOrDeniedClaimDTO;
+import com.infinite.jsf.provider.model.ClaimHistory;
+import com.infinite.jsf.provider.model.Claims;
+import com.infinite.jsf.provider.model.MedicalProcedure;
+import com.infinite.jsf.provider.model.PrescribedMedicines;
+import com.infinite.jsf.provider.model.Prescription;
+import com.infinite.jsf.provider.model.ProcedureTest;
+import com.infinite.jsf.recipient.model.Recipient;
+
+public interface ClaimDao {
+	
+	public List<MedicalProcedure> showUnclaimedProcedure();
+	public Recipient findByHid(String hId);
+	public Prescription getPrescriptionByProcedureId(MedicalProcedure procedure);
+	public List<PrescribedMedicines> getMedicinesByPrescription(Prescription prescription);
+	public List<ProcedureTest> getTestsByPrescription(Prescription prescription);
+//	public List<Subscribe> getSubscriptionsByHid(String hId);
+//	public InsuranceCoverageOption getCoverageBySubscription(Subscribe sub);
+//	public InsurancePlan getPlanByCoverage(InsuranceCoverageOption option);
+//	public InsuranceCompany getCompanyByPlan(InsurancePlan plan);
+	 public List<Subscribe> getActiveSubscriptionsByRecipient(String hId);
+	 public Claims fileClaim(Claims claim, ClaimHistory history);
+	 public List<PendingOrDeniedClaimDTO> showPendingClaimsDao();
+	 public Claims findByClaimId(String ClaimId);
+	 public Claims updateClaim(String ClaimId, ClaimHistory history);
+	 
+}

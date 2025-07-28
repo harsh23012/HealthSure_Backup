@@ -1,0 +1,86 @@
+/* 🌐 Base Setup */
+* {
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #1f2937;
+}
+
+/* 📦 Centered Container */
+.dashboard-container {
+    width: 70%;
+    max-width: 960px;
+    margin: 2rem auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+/* 👋 Welcome Message */
+.welcome-message {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.welcome-heading {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e3a8a;
+}
+.subtext {
+    font-size: 1rem;
+    color: #4b5563;
+}
+
+/* 📊 Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media screen and (min-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 🧩 Card Style */
+.card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+.card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+.card-value {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    color: #1f2937;
+}
+.card-note {
+    font-size: 0.75rem;
+    color: #6b7280;
+}

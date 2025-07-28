@@ -1,0 +1,94 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pending & Declined Claims</title>
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingOrDeclinedClaims.css" />
+</head>
+<f:view>
+<body>
+
+    <!-- Navbar -->
+    <div class="mb-6">
+        <jsp:include page="/navbar/NavProvider.jsp" />
+    </div>
+
+    <!-- Claims Panel -->
+    <h:panelGroup rendered="#{not empty claimController.paginatedPendingOrDeclinedClaim}">
+        <div class="page-wrapper">
+            <h2 class="page-title">Pending & Declined Claims</h2>
+
+            <h:form>
+                <h:dataTable value="#{claimController.paginatedPendingOrDeclinedClaim}" var="claim"
+                             styleClass="data-table">
+                    <h:column>
+                        <f:facet name="header">
+						    <h:commandLink action="#{claimController.sortByPendingClaim('claimId')}" styleClass="sortable-header">
+						        <h:outputText value="Claim ID" />
+						        <h:outputText value="#{claimController.sortField1 eq 'claimId' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ' ▲'}" />
+						    </h:commandLink>
+						</f:facet>
+
+                        <h:outputText value="#{claim.claimId}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Procedure ID" /></f:facet>
+                        <h:outputText value="#{claim.procedureId}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Amount Claimed" /></f:facet>
+                        <h:outputText value="#{claim.amountClaimed}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Amount Approved" /></f:facet>
+                        <h:outputText value="#{claim.amountApproved}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Status" /></f:facet>
+                        <h:outputText value="#{claim.claimStatus}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Remarks" /></f:facet>
+                        <h:outputText value="#{claim.description}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Action Date & Time" /></f:facet>
+                        <h:outputText value="#{claim.actionDate}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Action" /></f:facet>
+                        <h:commandButton value="Update Claim"
+                                         action="#{claimController.editClaim(claim.claimId)}"
+                                         styleClass="update-btn" />
+                    </h:column>
+                </h:dataTable>
+                
+                <div class="simple-pagination">
+		        <h:commandButton value="Previous"
+		                         action="#{claimController.previousPage1}"
+		                         disabled="#{!claimController.hasPreviousPage1}"
+		                         styleClass="nav-btn" />
+		
+		        <h:outputText value="Page #{claimController.currentPage1} of #{claimController.totalPages1}" 
+		                      styleClass="page-status" />
+		
+		        <h:commandButton value="Next"
+		                         action="#{claimController.nextPage1}"
+		                         disabled="#{!claimController.hasNextPage1}"
+		                         styleClass="nav-btn" />
+		    </div>
+            </h:form>
+        </div>
+    </h:panelGroup>
+
+    <!-- No Data Message -->
+    <h:panelGroup rendered="#{empty claimController.paginatedPendingOrDeclinedClaim}">
+        <p class="empty-message">No Pending or Denied Claim is available for update.</p>
+    </h:panelGroup>
+	    <!-- 📎 Footer -->
+    <jsp:include page="/footer/Footer.jsp" />
+</body>
+</f:view>
+</html>

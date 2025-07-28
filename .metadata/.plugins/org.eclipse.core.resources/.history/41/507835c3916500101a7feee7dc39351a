@@ -1,0 +1,63 @@
+/* 🌐 Page Styling */
+body {
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 4rem;
+    margin: 0;
+}
+
+/* 📦 Container */
+.actions-container {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* 🏷️ Heading */
+.page-heading {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #1d4ed8;
+    margin-bottom: 2rem;
+}
+
+/* 🎯 Button Layout */
+.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+/* 💡 Button Styling */
+.action-btn {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: #1e40af;
+    transform: scale(1.05);
+}
+
+.action-btn:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+    .action-buttons {
+        grid-template-columns: 1fr;
+    }
+}

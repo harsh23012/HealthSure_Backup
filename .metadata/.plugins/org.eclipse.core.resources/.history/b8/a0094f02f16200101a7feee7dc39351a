@@ -1,0 +1,82 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
+<%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Available Procedures for Claim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans pt-20">
+<f:view>
+
+    <!-- 🔗 Navbar -->
+    <jsp:include page="/navbar/NavProvider.jsp" />
+
+    <!-- 📋 Page Container -->
+    <div class="max-w-6xl mx-auto mt-8 bg-white p-6 rounded-lg shadow space-y-6">
+
+        <h1 class="text-2xl font-bold text-blue-700 text-center">Unclaimed Medical Procedures</h1>
+        <h:form>
+            <h:dataTable value="#{sessionScope.unclaimedProcedures}" var="proc"
+                         styleClass="min-w-full divide-y divide-gray-300 text-sm text-gray-700"
+                         headerClass="bg-blue-50 text-blue-700 font-semibold uppercase text-left px-4 py-2"
+                         rowClasses="bg-white hover:bg-blue-50 transition px-4 py-2">
+                <h:column>
+                    <f:facet name="header"><h:outputText value="Procedure ID" /></f:facet>
+                     <h:outputText value="#{proc.procedureId}" />
+                    
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"><h:outputText value="Diagnosis" /></f:facet>
+                     <h:outputText value="#{proc.diagnosis}" />
+                    
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"><h:outputText value="Procedure Date" /></f:facet>
+                     <h:outputText value="#{proc.procedureDate}" />
+                    
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"><h:outputText value="Doctor Name" /></f:facet>
+                     <h:outputText value="#{proc.doctor.doctorName}" />
+                    
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header"><h:outputText value="Hospital Name" /></f:facet>
+                     <h:outputText value="#{proc.provider.hospitalName}" />
+                    
+                </h:column>
+
+                 <h:column>
+				        <f:facet name="header"><h:outputText value="Action" /></f:facet>
+				        
+				            <h:commandButton value="View Details"
+				                             action="#{claimController.searchRecipient(proc.procedureId)}"
+				                             styleClass="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+				                <f:param name="recipientId" value="#{proc.recipient.hId}" />
+				            </h:commandButton>
+				        
+				    </h:column>
+
+            </h:dataTable>
+        </h:form>
+
+        <!-- No Data Message -->
+        <h:panelGroup rendered="#{empty sessionScope.unclaimedProcedures}">
+            <p class="text-center text-gray-500 italic">No procedures available for claim submission.</p>
+        </h:panelGroup>
+
+    </div>
+
+    <!-- 📎 Footer -->
+    <jsp:include page="/footer/Footer.jsp" />
+
+</f:view>
+</body>
+</html>

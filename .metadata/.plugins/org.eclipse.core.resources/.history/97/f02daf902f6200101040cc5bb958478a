@@ -1,0 +1,257 @@
+package com.infinite.jsf.provider.controller;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
+import com.infinite.jsf.insurance.model.Subscribe;
+import com.infinite.jsf.provider.dao.ClaimDao;
+import com.infinite.jsf.provider.model.ClaimHistory;
+import com.infinite.jsf.provider.model.ClaimStatus;
+import com.infinite.jsf.provider.model.Claims;
+import com.infinite.jsf.provider.model.MedicalProcedure;
+import com.infinite.jsf.provider.model.PrescribedMedicines;
+import com.infinite.jsf.provider.model.Prescription;
+import com.infinite.jsf.provider.model.ProcedureTest;
+import com.infinite.jsf.provider.model.Provider;
+import com.infinite.jsf.recipient.model.Recipient;
+import com.infinite.jsf.util.MailSend;
+
+public class ClaimController {
+	
+	private ClaimDao claimDao;
+	
+	private String recepientId;
+	private Recipient recipient;
+	private String message;
+	private List<Subscribe> subscriptions;
+	private List<MedicalProcedure> unclaimedProcedures;
+	private BigDecimal amountClaimed;
+	
+	public List<MedicalProcedure> getUnclaimedProcedures() {
+		return unclaimedProcedures;
+	}
+	public void setUnclaimedProcedures(List<MedicalProcedure> unclaimedProcedures) {
+		this.unclaimedProcedures = unclaimedProcedures;
+	}
+	public BigDecimal getAmountClaimed() {
+		return amountClaimed;
+	}
+	public void setAmountClaimed(BigDecimal amountClaimed) {
+		this.amountClaimed = amountClaimed;
+	}
+	public List<Subscribe> getSubscriptions() {
+		return subscriptions;
+	}
+	public void setSubscriptions(List<Subscribe> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+	public String getRecepientId() {
+		return recepientId;
+	}
+	public void setRecepientId(String recepientId) {
+		this.recepientId = recepientId;
+	}
+	public Recipient getRecipient() {
+		return recipient;
+	}
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public ClaimDao getClaimDao() {
+		return claimDao;
+	}
+	public void setClaimDao(ClaimDao claimDao) {
+		this.claimDao = claimDao;
+	}
+	
+	public String searchUnclaimedProcedure() {
+		unclaimedProcedures = claimDao.showUnclaimedProcedure();
+		System.out.println("list of unclaimed procedure : " + unclaimedProcedures.size());
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+		 httpSession.setAttribute("unclaimedProcedures", unclaimedProcedures);
+		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
+	}
+	public String searchRecipient(String recId) {
+		System.out.println("Recipient id : " + recId);
+		
+	    recipient = claimDao.findByHid(recId);
+	    if (recipient != null) {
+	        MedicalProcedure procedure = claimDao.getLatestProcedureByHid(recipient.gethId());
+
+	        Prescription prescription = null;
+	        List<PrescribedMedicines> medicines = null;
+	        List<ProcedureTest> tests = null;
+
+	        if (procedure != null) {
+	            prescription = claimDao.getPrescriptionByProcedureId(procedure);
+
+	            if (prescription != null) {
+	                medicines = claimDao.getMedicinesByPrescription(prescription);
+	                tests = claimDao.getTestsByPrescription(prescription);
+	            }
+	        }
+
+	        HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+	            .getExternalContext().getSession(true);
+
+	        httpSession.setAttribute("recipient", recipient);
+	        httpSession.setAttribute("procedure", procedure);
+	        httpSession.setAttribute("prescription", prescription);
+	        httpSession.setAttribute("medicines", medicines);
+	        httpSession.setAttribute("tests", tests);
+	        httpSession.setAttribute("recepientId", recId);
+	        return "selectInsurancePlan.jsp?faces-redirect=true";
+	    } else {
+	        message = "Recipient Not Found";
+	        return null;
+	    }
+	}
+	
+	
+	public String showPlans() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+		this.recepientId = (String) httpSession.getAttribute("recepientId");
+		System.out.println("Searching plans for: " + recepientId);
+		this.subscriptions = claimDao.getActiveSubscriptionsByRecipient(recepientId);
+		
+		if(subscriptions != null && !subscriptions.isEmpty()) {
+			System.out.println("Subscriptions found: " + subscriptions.size());
+		httpSession.setAttribute("subscriptions", subscriptions);
+		return "selectInsurancePlan.jsp?faces-redirect=true";
+		}
+		else {
+			message = "No active insurance plans found for this recipient.";
+			return null;
+		}
+	}
+	
+	public String selectPlan(String subscribeId) {
+//		System.out.println("Requested subscribeId: " + subscribeId);
+
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+	    @SuppressWarnings("unchecked")
+		List<Subscribe> allSubscriptions = (List<Subscribe>) httpSession.getAttribute("subscriptions");
+	    
+//	    Subscribe selectedSub = null;
+//	    for (Subscribe s : allSubscriptions) {
+//	        if (s.getSubscribeId().equals(subscribeId)) {
+//	            selectedSub = s;
+//	            break;
+//	        }
+//	    }
+
+	    Subscribe selectedSub = allSubscriptions.stream()
+	        .filter(s -> s.getSubscribeId().equals(subscribeId))
+	        .findFirst()
+	        .orElse(null);
+	    
+	    if (selectedSub != null) {
+	    	httpSession.setAttribute("selectedSubscribe", selectedSub);
+	        return "InitiateClaim.jsp?faces-redirect=true";
+	    } else {
+	        message = "Plan not found.";
+	        return null;
+	    }
+	}
+	
+	public String submitClaim() {
+	    HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+	            .getExternalContext().getSession(true);
+
+	    Recipient recipient = (Recipient) httpSession.getAttribute("recipient");
+	    MedicalProcedure procedure = (MedicalProcedure) httpSession.getAttribute("procedure");
+	    Subscribe subscribe = (Subscribe) httpSession.getAttribute("selectedSubscribe");
+//	    Provider provider = (Provider) httpSession.getAttribute("provider");
+	    Provider provider = new Provider();
+	    provider.setProviderId("PROV001");
+	    System.out.println("Provider is set");
+	    
+	    BigDecimal coverageAmount =BigDecimal.valueOf(subscribe.getCoverage().getCoverageAmount());
+	    // Validate required data
+	    if (recipient == null || procedure == null || subscribe == null || provider == null) {
+	        message = "Missing data for claim submission. Please ensure all steps are completed.";
+	        return null;
+	    }
+	    
+	    if (amountClaimed == null || amountClaimed.compareTo(BigDecimal.ZERO) <= 0 ) {
+	        message = "Claimed amount must be greater than zero.";
+	        return null;
+	    }
+	    if (amountClaimed.compareTo(coverageAmount) > 0 ) {
+	    	message = "Claim Amount must be less than or equal to Coverage Amount";
+	    	return null;
+	    }
+
+	    try {
+	        // Prepare Claims object
+	        Claims claim = new Claims();
+	        claim.setRecipient(recipient);
+	        claim.setProcedure(procedure);
+	        claim.setCoverage(subscribe);
+	        claim.setProvider(provider);
+	        claim.setAmountClaimed(amountClaimed);
+	        claim.setAmountApproved(BigDecimal.ZERO);
+	        claim.setClaimStatus(ClaimStatus.PENDING);
+	        claim.setClaimDate(new java.util.Date());
+
+	        // Prepare initial ClaimHistory
+	        ClaimHistory history = new ClaimHistory();
+	        history.setClaim(claim);
+	        history.setDescription("Claim submitted by provider.");
+	        history.setActionDate(new java.util.Date());
+
+	        // Submit through EJB
+	        Claims insertedClaim = claimDao.fileClaim(claim, history);
+	        System.out.println("Status" + insertedClaim);
+	        if (insertedClaim != null) {
+	        	httpSession.setAttribute("insertedClaims", insertedClaim);
+	        	String subject = "Hi " +claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + " Your Insurance claim is initialised ";
+	        	String body = "Dear " + claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + ",\n\n"
+	        		    + "We are pleased to inform you that your insurance claim has been successfully initiated.\n\n"
+	        		    + "🧾 Claim Details:\n"
+	        		    + "• Claim ID: " + insertedClaim.getClaimId() + "\n"
+	        		    + "• Procedure: " + claim.getProcedure().getDiagnosis() + "\n"
+	        		    + "• Claimed Amount: ₹" + claim.getAmountClaimed().toPlainString() + "\n"
+	        		    + "• Status: " + claim.getClaimStatus().name() + "\n"
+	        		    + "• Submission Date: " + claim.getClaimDate().toString() + "\n\n"
+	        		    + "You will be notified via email once your claim is reviewed and a decision has been made.\n\n"
+	        		    + "For any queries or updates, please reach out to our support team.\n\n"
+	        		    + "Warm regards,\n"
+	        		    + "HealthSure Claims Department";
+
+	        	MailSend.sendInfo(claim.getRecipient().getEmail(), subject, body);
+	            message = "Claim filed successfully.";
+	            return "ClaimSuccess.jsp?faces-redirect=true";
+	        } else {
+	            message = "Claim filing failed. Please try again.";
+	            return null;
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException
+	                || (e.getMessage() != null && e.getMessage().contains("Duplicate entry"))) {
+
+	                message = "A claim for this procedure has already been submitted.";
+	            } else {
+	                message = "Error occurred while submitting claim.";
+	            }
+	        return null;
+	    }
+	}
+
+
+}

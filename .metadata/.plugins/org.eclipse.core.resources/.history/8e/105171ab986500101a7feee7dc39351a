@@ -1,0 +1,70 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
+<%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Insurance Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ClaimActions.css" />
+</head>
+<body>
+<f:view>
+
+    <!-- 🔗 Navbar -->
+    <jsp:include page="/navbar/NavProvider.jsp" />
+
+    <!-- 📦 Centered Dashboard Section -->
+    <div class="dashboard-wrapper">
+        <div class="dashboard-container">
+            <h1 class="dashboard-title">Welcome to Your Insurance Dashboard</h1>
+
+            <div class="dashboard-grid">
+                <!-- 📝 File Insurance Claim -->
+                <h:form styleClass="dashboard-form">
+                    <h:commandButton action="#{claimController.searchUnclaimedProcedure}" value=" " styleClass="dashboard-btn">
+                        <div class="button-content">
+                            <span class="button-label">📝 File Insurance Claim</span>
+                            <p class="button-desc">Start a new insurance claim for unreimbursed medical procedures.</p>
+                        </div>
+                    </h:commandButton>
+                </h:form>
+
+                <!-- ✏️ Update Insurance Claim -->
+                <h:form styleClass="dashboard-form">
+                    <h:commandButton action="#{claimController.showPendingClaims}" value=" " styleClass="dashboard-btn">
+                        <div class="button-content">
+                            <span class="button-label">✏️ Update Insurance Claim</span>
+                            <p class="button-desc">Modify the amount or details of a claim you've already submitted.</p>
+                        </div>
+                    </h:commandButton>
+                </h:form>
+
+                <!-- 📜 Claims History -->
+                <h:form styleClass="dashboard-form">
+                    <h:commandButton action="#{claimController.viewClaimHistory}" value=" " styleClass="dashboard-btn">
+                        <div class="button-content">
+                            <span class="button-label">📜 Claims History</span>
+                            <p class="button-desc">Review previously filed claims and check their approval status.</p>
+                        </div>
+                    </h:commandButton>
+                </h:form>
+
+                <!-- 💳 Payment Records -->
+                <h:form styleClass="dashboard-form">
+                    <h:commandButton action="#{claimController.viewPaymentRecords}" value=" " styleClass="dashboard-btn">
+                        <div class="button-content">
+                            <span class="button-label">💳 Payment Records</span>
+                            <p class="button-desc">Track reimbursements and payments received from approved claims.</p>
+                        </div>
+                    </h:commandButton>
+                </h:form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📎 Footer -->
+    <jsp:include page="/footer/Footer.jsp" />
+
+</f:view>
+</body>
+</html>

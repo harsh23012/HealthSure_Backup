@@ -1,0 +1,56 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
+<%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Insurance Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ClaimActions.css" />
+</head>
+<body>
+<f:view>
+
+    <jsp:include page="/navbar/NavProvider.jsp" />
+
+    <div class="dashboard-wrapper">
+        <div class="dashboard-container">
+            <h1 class="dashboard-title">Welcome to Your Insurance Dashboard</h1>
+            <h:form>
+                <div class="dashboard-grid">
+				    <h:commandButton action="#{claimController.searchUnclaimedProcedure}" value=" " styleClass="dashboard-btn">
+					    <div class="button-content">
+					        <span class="button-label">📝 File Insurance Claim</span>
+					        <p class="button-desc">Start a new insurance claim for medical procedures that have not been reimbursed.</p>
+					    </div>
+					</h:commandButton>
+				
+				    <div class="dashboard-btn">
+				        <h:commandButton value="✏️ Update Insurance Claim"
+				                         action="#{claimController.showPendingClaims}"
+				                         styleClass="button-text" />
+				        <p class="button-desc">Modify amount to an existing claim you've already submitted.</p>
+				    </div>
+				
+				    <div class="dashboard-btn">
+				        <h:commandButton value="📜 Claims History"
+				                         action="#{claimController.viewClaimHistory}"
+				                         styleClass="button-text" />
+				        <p class="button-desc">Review all past insurance claims filed through the platform and their status.</p>
+				    </div>
+				
+				    <div class="dashboard-btn">
+				        <h:commandButton value="💳 Payment Records"
+				                         action="#{claimController.viewPaymentRecords}"
+				                         styleClass="button-text" />
+				        <p class="button-desc">Track reimbursements and payments received for completed insurance claims.</p>
+				    </div>
+				</div>
+            </h:form>
+        </div>
+    </div>
+
+    <jsp:include page="/footer/Footer.jsp" />
+
+</f:view>
+</body>
+</html>

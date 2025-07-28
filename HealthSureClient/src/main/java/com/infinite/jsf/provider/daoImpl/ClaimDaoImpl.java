@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,6 +27,7 @@ import com.infinite.jsf.provider.model.PrescribedMedicines;
 import com.infinite.jsf.provider.model.ProcedureTest;
 
 public class ClaimDaoImpl implements ClaimDao {
+	private static final Logger log = Logger.getLogger("com.infinite.jsf.provider.daoImpl");
 
     static SessionFactory sessionFactory;
     static {
@@ -61,6 +63,7 @@ public class ClaimDaoImpl implements ClaimDao {
         Session session = sessionFactory.openSession();
         Recipient recipient = (Recipient) session.get(Recipient.class, healthId);
         session.close();
+        log.info("Recipient found in Dao");
         return recipient;
     }
 
@@ -85,6 +88,7 @@ public class ClaimDaoImpl implements ClaimDao {
         .setMaxResults(1)
         .uniqueResult();
         session.close();
+        log.info("Prescription found in dao.");
         return prescription;
     }
 
@@ -98,6 +102,7 @@ public class ClaimDaoImpl implements ClaimDao {
         .setParameter("pid", prescription.getPrescriptionId())
         .list();
         session.close();
+        log.info("All medicines for a particula procedure is found.");
         return meds;
     }
 
@@ -111,6 +116,7 @@ public class ClaimDaoImpl implements ClaimDao {
         .setParameter("pid", prescription.getPrescriptionId())
         .list();
         session.close();
+        log.info("All tests for a particula procedure is found.");
         return tests;
     }
     
@@ -172,6 +178,7 @@ public class ClaimDaoImpl implements ClaimDao {
 				        .setParameter("today", new java.util.Date())
             .list();
         session.close();
+        log.info("All Subscription plans for a particula patient(Recipient) is found.");
         return subscriptions;
     }
 
@@ -190,7 +197,7 @@ public class ClaimDaoImpl implements ClaimDao {
             // Save the claim and its history
             session.save(claim);
             session.save(history);
-
+            log.info("Claim and claim History is filed and db is updated ");
             // 🛠 Update remaining coverage in Subscribe table
             String subscribeId = claim.getCoverage().getSubscribeId(); 
             Subscribe subscription = (Subscribe) session.get(Subscribe.class, subscribeId);
@@ -201,13 +208,14 @@ public class ClaimDaoImpl implements ClaimDao {
 
                 double updatedAmount = currentAmount - claimAmount;
                 subscription.setRemainingCoverageAmount(updatedAmount); // prevent negative values
-
+                log.info("Remaining coverage amount is updated for recipient Subscribe plan.");
                 session.update(subscription);
             }
 
             trans.commit();
         } catch (Exception e) {
             trans.rollback();
+            log.error("Claim filling failed and the details in db is rollbacked.");
             throw e;
         } finally {
             session.close();
@@ -232,6 +240,7 @@ public class ClaimDaoImpl implements ClaimDao {
 	    ).list();
 //	    System.out.println("List size : " + list.size());
 	    session.close();
+	    log.info("Unclaimed procedure is fetched from db in dao.");
 	    return list;
 	}
 
@@ -269,6 +278,7 @@ public class ClaimDaoImpl implements ClaimDao {
 	    }
 
 	    session.close();
+	    log.info("Pending or declined claim is fetched for updation of claim amount.");
 	    return pendingOrDeniedClaims;
 	}
 
@@ -290,6 +300,7 @@ public class ClaimDaoImpl implements ClaimDao {
         			    .setMaxResults(1)
         			    .uniqueResult();
         session.close();
+        log.info("Claim is found by claim Id.");
         return claim;
     }
 
@@ -315,12 +326,13 @@ public class ClaimDaoImpl implements ClaimDao {
 
                 double updatedAmount = currentAmount + claimAmount - updatedAmountClaim;
                 subscription.setRemainingCoverageAmount(updatedAmount); // prevent negative values
-
+                log.info("Remaining coverage amount is roll backed and updated with new claim amount.");
                 session.update(subscription);
             }   
             
             claim.setAmountClaimed(updatedAmountClaimed);
             session.update(claim);
+            log.info("Claim updated successfully in db.");
 		}
 		trans.commit();
 		return claim;

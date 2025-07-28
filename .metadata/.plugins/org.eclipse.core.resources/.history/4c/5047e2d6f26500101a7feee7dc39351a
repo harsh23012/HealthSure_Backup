@@ -1,0 +1,522 @@
+package com.infinite.jsf.provider.controller;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
+import com.infinite.jsf.insurance.model.Subscribe;
+import com.infinite.jsf.provider.dao.ClaimDao;
+import com.infinite.jsf.provider.dto.PendingOrDeniedClaimDTO;
+import com.infinite.jsf.provider.model.ClaimHistory;
+import com.infinite.jsf.provider.model.ClaimStatus;
+import com.infinite.jsf.provider.model.Claims;
+import com.infinite.jsf.provider.model.MedicalProcedure;
+import com.infinite.jsf.provider.model.PrescribedMedicines;
+import com.infinite.jsf.provider.model.Prescription;
+import com.infinite.jsf.provider.model.ProcedureTest;
+import com.infinite.jsf.provider.model.Provider;
+import com.infinite.jsf.recipient.model.Recipient;
+import com.infinite.jsf.util.MailSend;
+
+public class ClaimController {
+	
+	private ClaimDao claimDao;
+	
+	private String recepientId;
+	private Recipient recipient;
+	private String message;
+	private List<Subscribe> subscriptions;
+	private List<MedicalProcedure> unclaimedProcedures;
+	private List<MedicalProcedure> paginatedUnclaimedProcedures;
+	private String amountClaimed;
+	private List<PendingOrDeniedClaimDTO> pendingOrDeclinedClaim;
+	private List<PendingOrDeniedClaimDTO> paginatedPendingOrDeclinedClaim;
+	private int page = 0;
+	private int pageSize = 5;
+	
+	public void setPaginatedUnclaimedProcedures(List<MedicalProcedure> paginatedUnclaimedProcedures) {
+		this.paginatedUnclaimedProcedures = paginatedUnclaimedProcedures;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public List<PendingOrDeniedClaimDTO> getPendingOrDeclinedClaim() {
+		return pendingOrDeclinedClaim;
+	}
+	public void setPendingOrDeclinedClaim(List<PendingOrDeniedClaimDTO> pendingOrDeclinedClaim) {
+		this.pendingOrDeclinedClaim = pendingOrDeclinedClaim;
+	}
+	public List<MedicalProcedure> getUnclaimedProcedures() {
+		return unclaimedProcedures;
+	}
+	public void setUnclaimedProcedures(List<MedicalProcedure> unclaimedProcedures) {
+		this.unclaimedProcedures = unclaimedProcedures;
+	}
+	public String getAmountClaimed() {
+		return amountClaimed;
+	}
+	public void setAmountClaimed(String amountClaimed) {
+		this.amountClaimed = amountClaimed;
+	}
+	public List<Subscribe> getSubscriptions() {
+		return subscriptions;
+	}
+	public void setSubscriptions(List<Subscribe> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+	public String getRecepientId() {
+		return recepientId;
+	}
+	public void setRecepientId(String recepientId) {
+		this.recepientId = recepientId;
+	}
+	public Recipient getRecipient() {
+		return recipient;
+	}
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public ClaimDao getClaimDao() {
+		return claimDao;
+	}
+	public void setClaimDao(ClaimDao claimDao) {
+		this.claimDao = claimDao;
+	}
+	
+
+	
+	public String searchUnclaimedProcedure() {
+		unclaimedProcedures = claimDao.showUnclaimedProcedure();
+		System.out.println("list of unclaimed procedure : " + unclaimedProcedures.size());
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+		 httpSession.setAttribute("unclaimedProcedures", unclaimedProcedures);
+		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
+	}
+	
+	//=========================Pagination of searchUnclaimedProcedure ===========================
+	
+	public List<MedicalProcedure> getPaginatedUnclaimedProcedures() {
+	    if (unclaimedProcedures == null) {
+	    	searchUnclaimedProcedure(); // lazy loading like in visit history
+	    }
+ 
+	    
+	    if (unclaimedProcedures == null || unclaimedProcedures.isEmpty()) return Collections.emptyList();
+ 
+	    
+		int fromIndex = page * pageSize;
+	    if (fromIndex >= unclaimedProcedures.size()) {
+	    	page = 0;
+	        fromIndex = 0;
+	    }
+ 
+	    int toIndex = Math.min(fromIndex + pageSize, unclaimedProcedures.size());
+	    paginatedUnclaimedProcedures = unclaimedProcedures.subList(fromIndex, toIndex);
+	    return paginatedUnclaimedProcedures;
+	    
+	}
+ 
+	public void nextPage() {
+		
+		if ((page + 1) * pageSize < unclaimedProcedures.size()) {		
+			page++;
+		}
+	}
+ 
+	public void previousPage() {
+		if (page > 0) {
+			page--;
+		}
+	}
+ 
+	public boolean isHasNextPage() {
+		
+		return unclaimedProcedures != null && (page + 1) * pageSize < unclaimedProcedures.size();
+	}
+ 
+	public boolean isHasPreviousPage() {
+		return page > 0;
+	}
+ 
+	public int getCurrentPage() {
+		return page + 1;
+	}
+ 
+	public int getTotalPages() {
+		
+		if (unclaimedProcedures == null || unclaimedProcedures.isEmpty())
+			return 0;
+ 
+		return (int) Math.ceil((double) unclaimedProcedures.size() / pageSize);
+ 
+	}
+	
+	//======================= Pagination End ==============================
+	
+	
+	public String searchRecipient(MedicalProcedure procedure) {
+		System.out.println("Recipient id : " + procedure.getRecipient().gethId());
+		String recId = procedure.getRecipient().gethId();
+	    recipient = claimDao.findByHid(recId);
+	    if (recipient != null) {
+//	        MedicalProcedure procedure = claimDao.getLatestProcedureByHid(recipient.gethId());
+
+	        Prescription prescription = null;
+	        List<PrescribedMedicines> medicines = null;
+	        List<ProcedureTest> tests = null;
+
+	        if (procedure != null) {
+	            prescription = claimDao.getPrescriptionByProcedureId(procedure);
+
+	            if (prescription != null) {
+	                medicines = claimDao.getMedicinesByPrescription(prescription);
+	                tests = claimDao.getTestsByPrescription(prescription);
+	            }
+	        }
+
+	        HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+	            .getExternalContext().getSession(true);
+
+	        httpSession.setAttribute("recipient", recipient);
+	        httpSession.setAttribute("procedure", procedure);
+	        httpSession.setAttribute("prescription", prescription);
+	        httpSession.setAttribute("medicines", medicines);
+	        httpSession.setAttribute("tests", tests);
+	        httpSession.setAttribute("recepientId", recId);
+	        return "searchRecipient.jsp?faces-redirect=true";
+	    } else {
+	        message = "Recipient Not Found";
+	        return null;
+	    }
+	}
+	
+	
+	public String showPlans() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+		this.recepientId = (String) httpSession.getAttribute("recepientId");
+		System.out.println("Searching plans for: " + recepientId);
+		this.subscriptions = claimDao.getActiveSubscriptionsByRecipient(recepientId);
+		
+		if(subscriptions != null && !subscriptions.isEmpty()) {
+			System.out.println("Subscriptions found: " + subscriptions.size());
+		httpSession.setAttribute("subscriptions", subscriptions);
+		return "selectInsurancePlan.jsp?faces-redirect=true";
+		}
+		else {
+			message = "No active insurance plans found for this recipient.";
+			return "selectInsurancePlan.jsp?faces-redirect=true";
+		}
+	}
+	
+	public String selectPlan(String subscribeId) {
+//		System.out.println("Requested subscribeId: " + subscribeId);
+
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+	    @SuppressWarnings("unchecked")
+		List<Subscribe> allSubscriptions = (List<Subscribe>) httpSession.getAttribute("subscriptions");
+	    
+//	    Subscribe selectedSub = null;
+//	    for (Subscribe s : allSubscriptions) {
+//	        if (s.getSubscribeId().equals(subscribeId)) {
+//	            selectedSub = s;
+//	            break;
+//	        }
+//	    }
+
+	    Subscribe selectedSub = allSubscriptions.stream()
+	        .filter(s -> s.getSubscribeId().equals(subscribeId))
+	        .findFirst()
+	        .orElse(null);
+	    
+	    if (selectedSub != null) {
+	    	httpSession.setAttribute("selectedSubscribe", selectedSub);
+	        return "InitiateClaim.jsp?faces-redirect=true";
+	    } else {
+	        message = "Plan not found.";
+	        return null;
+	    }
+	}
+	
+	
+	public String submitClaim() {
+	    HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+	            .getExternalContext().getSession(true);
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    Recipient recipient = (Recipient) httpSession.getAttribute("recipient");
+	    MedicalProcedure procedure = (MedicalProcedure) httpSession.getAttribute("procedure");
+	    Subscribe subscribe = (Subscribe) httpSession.getAttribute("selectedSubscribe");
+//	    Provider provider = (Provider) httpSession.getAttribute("provider");
+	    Provider provider = new Provider();
+	    provider.setProviderId("PROV001");
+	    System.out.println("Provider is set");
+	    System.out.println("Amount claimed : " + amountClaimed);
+	    BigDecimal coverageAmount =BigDecimal.valueOf(subscribe.getRemainingCoverageAmount());
+	    // Validate required data
+	    if (recipient == null || procedure == null || subscribe == null || provider == null) {
+	        message = "Missing data for claim submission. Please ensure all steps are completed.";
+	        return null;
+	    }
+	    if (!amountClaimed.matches("^\\d+(\\.\\d+)?$")) {
+	        context.addMessage("amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Invalid Amount", "Please Enter Valid Amount to Claim. It should be Positive Number and and should be leass than or equal to remaining Coverage Amount."));
+
+	        return null;
+	    }
+	    BigDecimal amount = new BigDecimal(amountClaimed); // inputValue is the user-provided value
+	    if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0 ) {
+	    	context.addMessage("amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Invalid Amount", "Claimed amount must be positive number."));
+	        return null;
+	    }
+	
+	    if (amount.compareTo(coverageAmount) > 0 ) {
+	    	context.addMessage("amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Invalid Amount", "Claim Amount must be less than or equal to Remaining Coverage Amount."));
+
+	    	return null;
+	    }
+
+	    try {
+	        // Prepare Claims object
+	        Claims claim = new Claims();
+	        claim.setRecipient(recipient);
+	        claim.setProcedure(procedure);
+	        claim.setCoverage(subscribe);
+	        claim.setProvider(provider);
+	        claim.setAmountClaimed(amount);
+	        claim.setAmountApproved(BigDecimal.ZERO);
+	        claim.setClaimStatus(ClaimStatus.PENDING);
+	        claim.setClaimDate(new java.util.Date());
+
+	        // Prepare initial ClaimHistory
+	        ClaimHistory history = new ClaimHistory();
+	        history.setClaim(claim);
+	        history.setDescription("Claim submitted by provider.");
+	        history.setActionDate(new java.util.Date());
+
+	        // Submit through EJB
+	        Claims insertedClaim = claimDao.fileClaim(claim, history);
+//	        System.out.println("Status" + insertedClaim);
+	        if (insertedClaim != null) {
+	        	httpSession.setAttribute("insertedClaims", insertedClaim);
+	        	String subject = "Hi " +claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + " Your Insurance claim is initialised ";
+	        	String body = "Dear " + claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + ",\n\n"
+	        		    + "We are pleased to inform you that your insurance claim has been successfully initiated.\n\n"
+	        		    + "🧾 Claim Details:\n"
+	        		    + "• Claim ID: " + insertedClaim.getClaimId() + "\n"
+	        		    + "• Procedure: " + claim.getProcedure().getDiagnosis() + "\n"
+	        		    + "• Claimed Amount: ₹" + claim.getAmountClaimed().toPlainString() + "\n"
+	        		    + "• Status: " + claim.getClaimStatus().name() + "\n"
+	        		    + "• Submission Date: " + claim.getClaimDate().toString() + "\n\n"
+	        		    + "You will be notified via email once your claim is reviewed and a decision has been made.\n\n"
+	        		    + "For any queries or updates, please reach out to our support team.\n\n"
+	        		    + "Warm regards,\n"
+	        		    + "HealthSure Claims Department";
+
+	        	MailSend.sendInfo(claim.getRecipient().getEmail(), subject, body);
+	            message = "Claim filed successfully.";
+	            return "ClaimSuccess.jsp?faces-redirect=true";
+	        } else {
+	            message = "Claim filing failed. Please try again.";
+	            return null;
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException
+	                || (e.getMessage() != null && e.getMessage().contains("Duplicate entry"))) {
+
+	                message = "A claim for this procedure has already been submitted.";
+	            } else {
+	                message = "Error occurred while submitting claim.";
+	            }
+	        return null;
+	    }
+	}
+	
+	
+	public String showPendingClaims() {
+		pendingOrDeclinedClaim = claimDao.showPendingClaimsDao();
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);
+		System.out.println("size : " + pendingOrDeclinedClaim.size());
+		if(pendingOrDeclinedClaim != null && !pendingOrDeclinedClaim.isEmpty()) {
+			
+		 httpSession.setAttribute("pendingOrDeclinedClaim", pendingOrDeclinedClaim);
+
+		 return "ShowPendingOrDeclinedClaims.jsp?faces-redirect=true";
+		}
+		else {
+			message = "No Pending or Declined insurance plans found.";
+			return "ShowPendingOrDeclinedClaims.jsp?faces-redirect=true";
+		}
+		 		
+	}
+	
+	//=========================Pagination of searchUnclaimedProcedure ===========================
+	
+		public List<PendingOrDeniedClaimDTO> getPaginatedPendingOrDeclinedClaim() {
+		    if (pendingOrDeclinedClaim == null) {
+		    	searchUnclaimedProcedure(); // lazy loading like in visit history
+		    }
+	 
+		    
+		    if (pendingOrDeclinedClaim == null || pendingOrDeclinedClaim.isEmpty()) return Collections.emptyList();
+	 
+		    
+			int fromIndex = page * pageSize;
+		    if (fromIndex >= pendingOrDeclinedClaim.size()) {
+		    	page = 0;
+		        fromIndex = 0;
+		    }
+	 
+		    int toIndex = Math.min(fromIndex + pageSize, pendingOrDeclinedClaim.size());
+		    paginatedPendingOrDeclinedClaim = pendingOrDeclinedClaim.subList(fromIndex, toIndex);
+		    return paginatedPendingOrDeclinedClaim;
+		    
+		}
+	 
+		public void nextPage1() {
+			
+			if ((page + 1) * pageSize < pendingOrDeclinedClaim.size()) {		
+				page++;
+			}
+		}
+	 
+		public void previousPage1() {
+			if (page > 0) {
+				page--;
+			}
+		}
+	 
+		public boolean isHasNextPage1() {
+			
+			return pendingOrDeclinedClaim != null && (page + 1) * pageSize < pendingOrDeclinedClaim.size();
+		}
+	 
+		public boolean isHasPreviousPage1() {
+			return page > 0;
+		}
+	 
+		public int getCurrentPage1() {
+			return page + 1;
+		}
+	 
+		public int getTotalPages1() {
+			
+			if (pendingOrDeclinedClaim == null || pendingOrDeclinedClaim.isEmpty())
+				return 0;
+	 
+			return (int) Math.ceil((double) pendingOrDeclinedClaim.size() / pageSize);
+	 
+		}
+		
+		//======================= Pagination End ==============================
+	
+	
+	public String editClaim(String claimId) {
+		Claims claim = claimDao.findByClaimId(claimId);
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);	
+		httpSession.setAttribute("recipient", claim.getRecipient());
+        httpSession.setAttribute("procedure", claim.getProcedure());
+        httpSession.setAttribute("prescription", claim.getProcedure().getPrescriptions());
+        httpSession.setAttribute("selectedSubscribe", claim.getCoverage());
+        httpSession.setAttribute("claimId", claimId);
+        
+        
+//        httpSession.setAttribute("medicines", claim.getProcedure);
+        httpSession.setAttribute("tests", claim.getProcedure().getTests());
+		 return "UpdateClaim.jsp?faces-redirect=true";
+		
+	}
+	
+	public String updateClaim() {
+		
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
+				.getExternalContext().getSession(true);	
+		 Recipient recipient = (Recipient) httpSession.getAttribute("recipient");
+		    MedicalProcedure procedure = (MedicalProcedure) httpSession.getAttribute("procedure");
+		    Subscribe subscribe = (Subscribe) httpSession.getAttribute("selectedSubscribe");
+		    Provider provider = new Provider();
+		    provider.setProviderId("PROV001");
+		String claimId = (String) httpSession.getAttribute("claimId");
+		Claims claim = claimDao.findByClaimId(claimId);
+		
+		ClaimHistory history = new ClaimHistory();
+        history.setClaim(claim);
+        history.setDescription("Claim updated by provider.");
+        history.setActionDate(new java.util.Date());
+        
+        BigDecimal coverageAmount =BigDecimal.valueOf(subscribe.getRemainingCoverageAmount());
+	    // Validate required data
+	    if (recipient == null || procedure == null || subscribe == null || provider == null) {
+	        message = "Missing data for claim submission. Please ensure all steps are completed.";
+	        return null;
+	    }
+	    if (!amountClaimed.matches("^\\d+(\\.\\d+)?$")) {
+	        message = "Enter Valid Amount";
+	        return null;
+	    }
+	    BigDecimal amount = new BigDecimal(amountClaimed);
+	    if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0 ) {
+	        message = "Claimed amount must be positive number.";
+	        return null;
+	    }
+	
+	    if (amount.compareTo(coverageAmount) > 0 ) {
+	    	message = "Claim Amount must be less than or equal to Remaining Coverage Amount";
+	    	return null;
+	    }
+	    
+		Claims updatedClaim = claimDao.updateClaim(claimId, history, amount);
+		if(updatedClaim != null) {
+			httpSession.setAttribute("updatedClaim", updatedClaim);
+			httpSession.setAttribute("history", history);
+	    	String subject = "Hi " +claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + " Your Insurance claim is updated ";
+	    	String body = "Dear " + claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + ",\n\n"
+	    		    + "We are pleased to inform you that your insurance claim has been successfully updated.\n\n"
+	    		    + "🧾 Claim Details:\n"
+	    		    + "• Claim ID: " + updatedClaim.getClaimId() + "\n"
+	    		    + "• Procedure: " + claim.getProcedure().getDiagnosis() + "\n"
+	    		    + "• Claimed Amount: ₹" + amount + "\n"
+	    		    + "• Status: " + claim.getClaimStatus().name() + "\n"
+	    		    + "• Re-claim Date & Time: " + history.getActionDate().toString() + "\n"
+	    		    + "• Submission Date & Time: " + claim.getClaimDate().toString() + "\n\n"
+	    		    + "You will be notified via email once your claim is reviewed and a decision has been made.\n\n"
+	    		    + "For any queries or updates, please reach out to our support team.\n\n"
+	    		    + "Warm regards,\n"
+	    		    + "HealthSure Claims Department";
+	
+	    	MailSend.sendInfo(claim.getRecipient().getEmail(), subject, body);
+	        message = "Claim updated successfully.";
+	        return "UpdationComplete.jsp?faces-redirect=true";
+	    } else {
+	        message = "Claim filing failed. Please try again.";
+	        return null;
+	    }
+	}
+}

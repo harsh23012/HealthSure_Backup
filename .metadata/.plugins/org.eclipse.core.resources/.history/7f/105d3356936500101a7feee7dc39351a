@@ -1,0 +1,88 @@
+/* 🌐 Base Page Setup */
+html, body {
+    height: 100%;
+    margin-top: 2rem;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 📦 Wrapper: vertical + horizontal centering */
+.dashboard-wrapper {
+    min-height: calc(100vh - 120px); /* allows space for navbar + footer */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* 🧭 Main Container */
+.dashboard-container {
+    width: 100%;
+    max-width: 720px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* 🏷️ Page Title */
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 2rem;
+}
+
+/* 🧩 Grid of Buttons */
+.dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* 🚀 Action Buttons */
+.dashboard-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.125rem;
+    font-weight: bold;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+
+.dashboard-btn:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+/* 🔐 Disabled button style (if used later) */
+.dashboard-btn:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* 📱 Responsive Enhancements */
+@media (max-width: 600px) {
+    .dashboard-container {
+        margin: 0 1rem;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-btn {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+}

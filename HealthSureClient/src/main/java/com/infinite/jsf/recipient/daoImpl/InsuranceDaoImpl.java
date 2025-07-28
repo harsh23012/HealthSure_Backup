@@ -80,7 +80,7 @@ public class InsuranceDaoImpl implements InsuranceDao{
 			details.setLastClaimDate((Date) row[13]);
 
 			if (type == SubscriptionType.FAMILY) {
-				Query memberQuery = session.getNamedQuery("SubscribedMember.findBySubscribeId");
+				Query memberQuery = session.getNamedQuery("SubscribeMember.findBySubscribeId");
 				memberQuery.setParameter("subscribeId", details.getSubscribeId());
 
 				List<SubscribedMember> memberRows = memberQuery.list();

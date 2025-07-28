@@ -1,12 +1,16 @@
 package com.infinite.jsf.provider.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import com.infinite.jsf.insurance.model.Subscribe;
 import com.infinite.jsf.provider.dao.ClaimDao;
@@ -24,6 +28,8 @@ import com.infinite.jsf.util.MailSend;
 
 public class ClaimController {
 	
+	private static final Logger log = Logger.getLogger("com.infinite.jsf.provider.controller");
+	
 	private ClaimDao claimDao;
 	
 	private String recepientId;
@@ -37,6 +43,25 @@ public class ClaimController {
 	private List<PendingOrDeniedClaimDTO> paginatedPendingOrDeclinedClaim;
 	private int page = 0;
 	private int pageSize = 5;
+	private String sortField = "procedureId"; // default sort field
+	private boolean ascending = true;
+	
+	public String getSortField() {
+	    return sortField;
+	}
+
+	public void setSortField(String sortField) {
+	    this.sortField = sortField;
+	}
+
+	public boolean isAscending() {
+	    return ascending;
+	}
+
+	public void setAscending(boolean ascending) {
+	    this.ascending = ascending;
+	}
+
 	
 	public void setPaginatedUnclaimedProcedures(List<MedicalProcedure> paginatedUnclaimedProcedures) {
 		this.paginatedUnclaimedProcedures = paginatedUnclaimedProcedures;
@@ -103,6 +128,15 @@ public class ClaimController {
 		this.claimDao = claimDao;
 	}
 	
+	public void sortBy(String field) {
+	    if (field.equals(this.sortField)) {
+	        this.ascending = !this.ascending; // toggle sort direction
+	    } else {
+	        this.sortField = field;
+	        this.ascending = true; // default to ascending
+	    }
+	    page = 0; // reset to first page
+	}
 
 	
 	public String searchUnclaimedProcedure() {
@@ -111,31 +145,59 @@ public class ClaimController {
 		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(true);
 		 httpSession.setAttribute("unclaimedProcedures", unclaimedProcedures);
+		 log.info("Unclaimed Procedure Fetched.");
 		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
 	}
 	
-	//=========================Pagination of searchUnclaimedProcedure ===========================
-	
 	public List<MedicalProcedure> getPaginatedUnclaimedProcedures() {
 	    if (unclaimedProcedures == null) {
-	    	searchUnclaimedProcedure(); // lazy loading like in visit history
+	        searchUnclaimedProcedure(); // lazy load
 	    }
- 
-	    
-	    if (unclaimedProcedures == null || unclaimedProcedures.isEmpty()) return Collections.emptyList();
- 
-	    
-		int fromIndex = page * pageSize;
-	    if (fromIndex >= unclaimedProcedures.size()) {
-	    	page = 0;
+
+	    if (unclaimedProcedures == null || unclaimedProcedures.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+
+	    // 🔀 Apply sorting using if-else
+	    Comparator<MedicalProcedure> comparator;
+
+	    if ("procedureId".equals(sortField)) {
+	        comparator = Comparator.comparing(MedicalProcedure::getProcedureId);
+	    } else if ("diagnosis".equals(sortField)) {
+	        comparator = Comparator.comparing(MedicalProcedure::getDiagnosis, String.CASE_INSENSITIVE_ORDER);
+	    } else if ("procedureDate".equals(sortField)) {
+	        comparator = Comparator.comparing(MedicalProcedure::getProcedureDate);
+	    } else if ("doctorName".equals(sortField)) {
+	        comparator = Comparator.comparing(p -> p.getDoctor().getDoctorName(), String.CASE_INSENSITIVE_ORDER);
+	    } else if ("hospitalName".equals(sortField)) {
+	        comparator = Comparator.comparing(p -> p.getProvider().getHospitalName(), String.CASE_INSENSITIVE_ORDER);
+	    } else {
+	        comparator = Comparator.comparing(MedicalProcedure::getProcedureId); // default
+	    }
+
+	    if (!ascending) {
+	        comparator = comparator.reversed();
+	    }
+
+	    List<MedicalProcedure> sortedList = new java.util.ArrayList<>(unclaimedProcedures);
+	    Collections.sort(sortedList, comparator);
+
+	    // 📄 Apply pagination
+	    int fromIndex = page * pageSize;
+	    if (fromIndex >= sortedList.size()) {
+	        page = 0;
 	        fromIndex = 0;
 	    }
- 
-	    int toIndex = Math.min(fromIndex + pageSize, unclaimedProcedures.size());
-	    paginatedUnclaimedProcedures = unclaimedProcedures.subList(fromIndex, toIndex);
+
+	    int toIndex = Math.min(fromIndex + pageSize, sortedList.size());
+	    paginatedUnclaimedProcedures = sortedList.subList(fromIndex, toIndex);
 	    return paginatedUnclaimedProcedures;
-	    
 	}
+
+	
+	//=========================Pagination of searchUnclaimedProcedure ===========================
+	
+	
  
 	public void nextPage() {
 		
@@ -175,6 +237,8 @@ public class ClaimController {
 	//======================= Pagination End ==============================
 	
 	
+	
+	
 	public String searchRecipient(MedicalProcedure procedure) {
 		System.out.println("Recipient id : " + procedure.getRecipient().gethId());
 		String recId = procedure.getRecipient().gethId();
@@ -204,8 +268,10 @@ public class ClaimController {
 	        httpSession.setAttribute("medicines", medicines);
 	        httpSession.setAttribute("tests", tests);
 	        httpSession.setAttribute("recepientId", recId);
+	        log.info("All the details of selected procedure  fetched and stored in session.");
 	        return "searchRecipient.jsp?faces-redirect=true";
 	    } else {
+	    	log.error("Recipient Not found.");
 	        message = "Recipient Not Found";
 	        return null;
 	    }
@@ -216,15 +282,16 @@ public class ClaimController {
 		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(true);
 		this.recepientId = (String) httpSession.getAttribute("recepientId");
-		System.out.println("Searching plans for: " + recepientId);
 		this.subscriptions = claimDao.getActiveSubscriptionsByRecipient(recepientId);
 		
 		if(subscriptions != null && !subscriptions.isEmpty()) {
 			System.out.println("Subscriptions found: " + subscriptions.size());
 		httpSession.setAttribute("subscriptions", subscriptions);
+		log.info("All Subscribe plans are fetched..");
 		return "selectInsurancePlan.jsp?faces-redirect=true";
 		}
 		else {
+			log.error("No active insurance found of recipient with id : " + recepientId + ".");
 			message = "No active insurance plans found for this recipient.";
 			return "selectInsurancePlan.jsp?faces-redirect=true";
 		}
@@ -253,8 +320,10 @@ public class ClaimController {
 	    
 	    if (selectedSub != null) {
 	    	httpSession.setAttribute("selectedSubscribe", selectedSub);
+	    	log.info("Plan is selected for claim.");
 	        return "InitiateClaim.jsp?faces-redirect=true";
 	    } else {
+	    	log.error("Plan not found.");
 	        message = "Plan not found.";
 	        return null;
 	    }
@@ -279,7 +348,7 @@ public class ClaimController {
 	        message = "Missing data for claim submission. Please ensure all steps are completed.";
 	        return null;
 	    }
-	    if (!amountClaimed.matches("^\\d+(\\.\\d+)?$")) {
+	    if (!amountClaimed.matches("^-?\\d+(\\.\\d+)?$")) {
 	        context.addMessage("application:amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Invalid Amount", "Please Enter Valid Amount to Claim."));
 	        return null;
@@ -323,22 +392,28 @@ public class ClaimController {
 	        	httpSession.setAttribute("insertedClaims", insertedClaim);
 	        	String subject = "Hi " +claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + " Your Insurance claim is initialised ";
 	        	String body = "Dear " + claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + ",\n\n"
-	        		    + "We are pleased to inform you that your insurance claim has been successfully initiated.\n\n"
-	        		    + "🧾 Claim Details:\n"
-	        		    + "• Claim ID: " + insertedClaim.getClaimId() + "\n"
-	        		    + "• Procedure: " + claim.getProcedure().getDiagnosis() + "\n"
-	        		    + "• Claimed Amount: ₹" + claim.getAmountClaimed().toPlainString() + "\n"
-	        		    + "• Status: " + claim.getClaimStatus().name() + "\n"
-	        		    + "• Submission Date: " + claim.getClaimDate().toString() + "\n\n"
-	        		    + "You will be notified via email once your claim is reviewed and a decision has been made.\n\n"
-	        		    + "For any queries or updates, please reach out to our support team.\n\n"
-	        		    + "Warm regards,\n"
-	        		    + "HealthSure Claims Department";
+	                    + "We’re pleased to inform you that your insurance claim has been successfully initiated.\n\n"
+	                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+	                    + "📄 CLAIM SUMMARY\n"
+	                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+	                    + "• Claim ID         : " + insertedClaim.getClaimId() + "\n"
+	                    + "• Procedure        : " + claim.getProcedure().getDiagnosis() + "\n"
+	                    + "• Claimed Amount   : ₹" + claim.getAmountClaimed().toPlainString() + "\n"
+	                    + "• Status           : " + claim.getClaimStatus().name() + "\n"
+	                    + "• Submission Date  : " + claim.getClaimDate().toString() + "\n"
+	                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+	                    + "You will receive further updates via email once your claim has been reviewed and a decision is made.\n\n"
+	                    + "If you have any questions or need assistance, feel free to contact our support team.\n\n"
+	                    + "Warm regards,\n"
+	                    + "HealthSure Claims Department";
+
 
 	        	MailSend.sendInfo(claim.getRecipient().getEmail(), subject, body);
+	        	log.info("Claim filed successfully for recipeint : " + claim.getRecipient().getFirstName());
 	            message = "Claim filed successfully.";
 	            return "ClaimSuccess.jsp?faces-redirect=true";
 	        } else {
+	        	log.error("Insurance claim failed for " + claim.getRecipient().getFirstName() + ".");
 	            message = "Claim filing failed. Please try again.";
 	            return null;
 	        }
@@ -347,9 +422,10 @@ public class ClaimController {
 	        e.printStackTrace();
 	        if (e.getCause() instanceof java.sql.SQLIntegrityConstraintViolationException
 	                || (e.getMessage() != null && e.getMessage().contains("Duplicate entry"))) {
-
+	        		log.error("A claim for this procedure " + procedure.getProcedureId() +" has already been submitted.");
 	                message = "A claim for this procedure has already been submitted.";
 	            } else {
+	            	log.error("Error while submitting claim.");
 	                message = "Error occurred while submitting claim.";
 	            }
 	        return null;
@@ -365,10 +441,11 @@ public class ClaimController {
 		if(pendingOrDeclinedClaim != null && !pendingOrDeclinedClaim.isEmpty()) {
 			
 		 httpSession.setAttribute("pendingOrDeclinedClaim", pendingOrDeclinedClaim);
-
+		 log.info("Pending or declined claims are fetched for updation.");
 		 return "ShowPendingOrDeclinedClaims.jsp?faces-redirect=true";
 		}
 		else {
+			log.error("No Pending or Declined insurance plans found.");
 			message = "No Pending or Declined insurance plans found.";
 			return "ShowPendingOrDeclinedClaims.jsp?faces-redirect=true";
 		}
@@ -376,27 +453,82 @@ public class ClaimController {
 	}
 	
 	//=========================Pagination of searchUnclaimedProcedure ===========================
+	private String sortField1 = "claimId"; // default sort field
+	private boolean ascending1 = true;
 	
-		public List<PendingOrDeniedClaimDTO> getPaginatedPendingOrDeclinedClaim() {
-		    if (pendingOrDeclinedClaim == null) {
-		    	searchUnclaimedProcedure(); // lazy loading like in visit history
-		    }
-	 
-		    
-		    if (pendingOrDeclinedClaim == null || pendingOrDeclinedClaim.isEmpty()) return Collections.emptyList();
-	 
-		    
-			int fromIndex = page * pageSize;
-		    if (fromIndex >= pendingOrDeclinedClaim.size()) {
-		    	page = 0;
-		        fromIndex = 0;
-		    }
-	 
-		    int toIndex = Math.min(fromIndex + pageSize, pendingOrDeclinedClaim.size());
-		    paginatedPendingOrDeclinedClaim = pendingOrDeclinedClaim.subList(fromIndex, toIndex);
-		    return paginatedPendingOrDeclinedClaim;
-		    
-		}
+	public String getSortField1() {
+	    return sortField1;
+	}
+
+	public void setSortField1(String sortField1) {
+	    this.sortField1 = sortField1;
+	}
+
+	public boolean isAscending1() {
+	    return ascending1;
+	}
+
+	public void setAscending1(boolean ascending1) {
+	    this.ascending1 = ascending1;
+	}
+
+	public void sortByPendingClaim(String field) {
+	    if (field.equals(this.sortField1)) {
+	        this.ascending1 = !this.ascending1;
+	    } else {
+	        this.sortField1 = field;
+	        this.ascending1 = true;
+	    }
+	    page = 0;
+	}
+
+	public List<PendingOrDeniedClaimDTO> getPaginatedPendingOrDeclinedClaim() {
+	    if (pendingOrDeclinedClaim == null) {
+	        showPendingClaims(); // lazy load
+	    }
+
+	    if (pendingOrDeclinedClaim == null || pendingOrDeclinedClaim.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+
+	    Comparator<PendingOrDeniedClaimDTO> comparator;
+
+	    if ("claimId".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
+	    } else if ("procedureId".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getProcedureId);
+	    } else if ("amountClaimed".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountClaimed);
+	    } else if ("amountApproved".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountApproved);
+	    } else if ("claimStatus".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimStatus, String.CASE_INSENSITIVE_ORDER);
+	    } else if ("description".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getDescription, String.CASE_INSENSITIVE_ORDER);
+	    } else if ("actionDate".equals(sortField1)) {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getActionDate);
+	    } else {
+	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
+	    }
+
+	    if (!ascending1) {
+	        comparator = comparator.reversed();
+	    }
+
+	    List<PendingOrDeniedClaimDTO> sortedList = new ArrayList<>(pendingOrDeclinedClaim);
+	    Collections.sort(sortedList, comparator);
+
+	    int fromIndex = page * pageSize;
+	    if (fromIndex >= sortedList.size()) {
+	        page = 0;
+	        fromIndex = 0;
+	    }
+
+	    int toIndex = Math.min(fromIndex + pageSize, sortedList.size());
+	    paginatedPendingOrDeclinedClaim = sortedList.subList(fromIndex, toIndex);
+	    return paginatedPendingOrDeclinedClaim;
+	}
+
 	 
 		public void nextPage1() {
 			
@@ -449,6 +581,7 @@ public class ClaimController {
         
 //        httpSession.setAttribute("medicines", claim.getProcedure);
         httpSession.setAttribute("tests", claim.getProcedure().getTests());
+        log.info("All details are fetched for update claim.");
 		 return "UpdateClaim.jsp?faces-redirect=true";
 		
 	}
@@ -465,7 +598,9 @@ public class ClaimController {
 		    provider.setProviderId("PROV001");
 		String claimId = (String) httpSession.getAttribute("claimId");
 		Claims claim = claimDao.findByClaimId(claimId);
-		
+		if(claim != null) {
+			log.info("Claim is found for updation");
+		}
 		ClaimHistory history = new ClaimHistory();
         history.setClaim(claim);
         history.setDescription("Claim updated by provider.");
@@ -477,21 +612,21 @@ public class ClaimController {
 	        message = "Missing data for claim submission. Please ensure all steps are completed.";
 	        return null;
 	    }
-	    if (!amountClaimed.matches("^\\d+(\\.\\d+)?$")) {
-	        context.addMessage("application:amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	    if (!amountClaimed.matches("^-?\\d+(\\.\\d+)?$")) {
+	        context.addMessage("updation:amountUpdated", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Invalid Amount", "Please Enter Valid Amount to Claim."));
 
 	        return null;
 	    }
 	    BigDecimal amount = new BigDecimal(amountClaimed); // inputValue is the user-provided value
 	    if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0 ) {
-	    	context.addMessage("application:amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	    	context.addMessage("updation:amountUpdated", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Invalid Amount", "Claimed amount must be positive number."));
 	        return null;
 	    }
 	
 	    if (amount.compareTo(coverageAmount) > 0 ) {
-	    	context.addMessage("application:amountClaimed", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	    	context.addMessage("updation:amountUpdated", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Invalid Amount", "Claim Amount must be less than or equal to Remaining Coverage Amount."));
 
 	    	return null;
@@ -505,23 +640,28 @@ public class ClaimController {
 	    	String subject = "Hi " +claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + " Your Insurance claim is updated ";
 	    	String body = "Dear " + claim.getRecipient().getFirstName() + " " + claim.getRecipient().getLastName() + ",\n\n"
 	    		    + "We are pleased to inform you that your insurance claim has been successfully updated.\n\n"
-	    		    + "🧾 Claim Details:\n"
+	    		    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                    + "📄 CLAIM SUMMARY\n"
+                    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
 	    		    + "• Claim ID: " + updatedClaim.getClaimId() + "\n"
 	    		    + "• Procedure: " + claim.getProcedure().getDiagnosis() + "\n"
 	    		    + "• Claimed Amount: ₹" + amount + "\n"
 	    		    + "• Status: " + claim.getClaimStatus().name() + "\n"
 	    		    + "• Re-claim Date & Time: " + history.getActionDate().toString() + "\n"
-	    		    + "• Submission Date & Time: " + claim.getClaimDate().toString() + "\n\n"
+	    		    + "• Submission Date & Time: " + claim.getClaimDate().toString() + "\n"
+	    		    + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
 	    		    + "You will be notified via email once your claim is reviewed and a decision has been made.\n\n"
 	    		    + "For any queries or updates, please reach out to our support team.\n\n"
 	    		    + "Warm regards,\n"
 	    		    + "HealthSure Claims Department";
 	
 	    	MailSend.sendInfo(claim.getRecipient().getEmail(), subject, body);
+	    	log.info("Claim updated successfully.");
 	        message = "Claim updated successfully.";
 	        return "UpdationComplete.jsp?faces-redirect=true";
 	    } else {
-	        message = "Claim filing failed. Please try again.";
+	    	log.error("Claim updation failed for claim id : " + claim.getClaimId());
+	        message = "Claim updation failed. Please try again.";
 	        return null;
 	    }
 	}

@@ -1,0 +1,10 @@
+127.0.0.1 - - [25/Jul/2025:18:44:09 +0530] "GET / HTTP/1.1" 404 1074
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:11 +0530] "GET /HealthSureClient/javax.faces.resource/images/defaultProfile.jpg.jsf?ln=media HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:11 +0530] "GET /HealthSureClient/javax.faces.resource/images/Logo.jpg.jsf?ln=media HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:11 +0530] "GET /HealthSureClient/provider/Provider.jsf HTTP/1.1" 200 36792
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:11 +0530] "GET /HealthSureClient/resources/css/footer.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:18 +0530] "POST /HealthSureClient/provider/Provider.jsf HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:19 +0530] "GET /HealthSureClient/provider/ShowMedicalProcedureToClaim.jsf HTTP/1.1" 200 14944
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:19 +0530] "GET /HealthSureClient/javax.faces.resource/images/Logo.jpg.jsf?ln=media HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:19 +0530] "GET /HealthSureClient/javax.faces.resource/jsf.js.jsf?ln=javax.faces HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [25/Jul/2025:18:44:19 +0530] "GET /HealthSureClient/javax.faces.resource/images/defaultProfile.jpg.jsf?ln=media HTTP/1.1" 304 -

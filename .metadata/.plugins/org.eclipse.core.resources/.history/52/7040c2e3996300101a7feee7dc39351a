@@ -1,0 +1,72 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pending & Declined Claims</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<f:view>
+<body>
+
+    <!-- Navbar -->
+    <div class="mb-6">
+        <jsp:include page="/navbar/NavProvider.jsp" />
+    </div>
+
+    <!-- Claims Panel -->
+    <h:panelGroup rendered="#{not empty sessionScope.pendingOrDeclinedClaim}">
+        <div class="page-wrapper">
+            <h2 class="page-title">Pending & Declined Claims</h2>
+
+            <h:form>
+                <h:dataTable value="#{sessionScope.pendingOrDeclinedClaim}" var="claim"
+                             styleClass="data-table">
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Claim ID" /></f:facet>
+                        <h:outputText value="#{claim.claimId}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Procedure ID" /></f:facet>
+                        <h:outputText value="#{claim.procedureId}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Amount Claimed" /></f:facet>
+                        <h:outputText value="#{claim.amountClaimed}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Amount Approved" /></f:facet>
+                        <h:outputText value="#{claim.amountApproved}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Status" /></f:facet>
+                        <h:outputText value="#{claim.claimStatus}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Remarks" /></f:facet>
+                        <h:outputText value="#{claim.description}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Action Date & Time" /></f:facet>
+                        <h:outputText value="#{claim.actionDate}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="Action" /></f:facet>
+                        <h:commandButton value="Update Claim"
+                                         action="#{claimController.editClaim(claim.claimId)}"
+                                         styleClass="update-btn" />
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+    </h:panelGroup>
+
+    <!-- No Data Message -->
+    <h:panelGroup rendered="#{empty sessionScope.pendingOrDeclinedClaim}">
+        <p class="empty-message">No Pending or Denied Claim is available for update.</p>
+    </h:panelGroup>
+
+</body>
+</f:view>
+</html>

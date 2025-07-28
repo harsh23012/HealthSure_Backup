@@ -1,0 +1,284 @@
+package com.infinite.jsf.provider.daoImpl;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+//import com.infinite.jsf.insurance.model.InsuranceCompany;
+//import com.infinite.jsf.insurance.model.InsuranceCoverageOption;
+//import com.infinite.jsf.insurance.model.InsurancePlan;
+import com.infinite.jsf.insurance.model.Subscribe;
+import com.infinite.jsf.provider.dao.ClaimDao;
+import com.infinite.jsf.provider.dto.PendingOrDeniedClaimDTO;
+import com.infinite.jsf.recipient.model.Recipient;
+import com.infinite.jsf.util.SessionHelper;
+import com.infinite.jsf.provider.model.ClaimHistory;
+import com.infinite.jsf.provider.model.ClaimStatus;
+import com.infinite.jsf.provider.model.Claims;
+import com.infinite.jsf.provider.model.MedicalProcedure;
+import com.infinite.jsf.provider.model.Prescription;
+import com.infinite.jsf.provider.model.PrescribedMedicines;
+import com.infinite.jsf.provider.model.ProcedureTest;
+
+public class ClaimDaoImpl implements ClaimDao {
+
+    static SessionFactory sessionFactory;
+    static {
+        sessionFactory = SessionHelper.getSessionFactory();
+    }
+    
+    public static String getNextClaimId(Session session) {
+        String prefix = "CLAIM";
+        String hql = "select max(claimId) from Claims";
+        String maxId = (String) session.createQuery(hql).uniqueResult();
+        if (maxId == null) {
+            return prefix + "001";
+        }
+        int id = Integer.parseInt(maxId.substring(prefix.length()));
+        id++;
+        return String.format("%s%03d", prefix, id);
+    }
+    
+    public static String getNextClaimHistoryId(Session session) {
+    	String prefix = "CHIST";
+    	String hql = "select max(claimHistoryId) from ClaimHistory";
+    	String maxId = (String) session.createQuery(hql).uniqueResult();
+    	if (maxId == null) {
+    		return prefix + "001";
+    	}
+    	int id = Integer.parseInt(maxId.substring(prefix.length()));
+    	id++;
+    	return String.format("%s%03d", prefix, id);
+    }
+
+    @Override
+    public Recipient findByHid(String healthId) {
+        Session session = sessionFactory.openSession();
+        Recipient recipient = (Recipient) session.get(Recipient.class, healthId);
+        session.close();
+        return recipient;
+    }
+
+    public MedicalProcedure getLatestProcedureByHid(String hId) {
+        Session session = sessionFactory.openSession();
+        MedicalProcedure procedure = (MedicalProcedure) session.createQuery(
+            "FROM MedicalProcedure WHERE recipient.hId = :hId ORDER BY procedureDate DESC"
+        )
+        .setParameter("hId", hId)
+        .setMaxResults(1)
+        .uniqueResult();
+        session.close();
+        return procedure;
+    }
+
+    public Prescription getPrescriptionByProcedureId(MedicalProcedure procedure) {
+        Session session = sessionFactory.openSession();
+        Prescription prescription = (Prescription) session.createQuery(
+            "FROM Prescription WHERE procedure.procedureId = :pid ORDER BY writtenOn DESC"
+        )
+        .setParameter("pid", procedure.getProcedureId())
+        .setMaxResults(1)
+        .uniqueResult();
+        session.close();
+        return prescription;
+    }
+
+
+    public List<PrescribedMedicines> getMedicinesByPrescription(Prescription prescription) {
+        Session session = sessionFactory.openSession();
+        @SuppressWarnings("unchecked")
+        List<PrescribedMedicines> meds = session.createQuery(
+            "FROM PrescribedMedicines WHERE prescription.prescriptionId = :pid"
+        )
+        .setParameter("pid", prescription.getPrescriptionId())
+        .list();
+        session.close();
+        return meds;
+    }
+
+
+    public List<ProcedureTest> getTestsByPrescription(Prescription prescription) {
+        Session session = sessionFactory.openSession();
+        @SuppressWarnings("unchecked")
+        List<ProcedureTest> tests = session.createQuery(
+            "FROM ProcedureTest WHERE prescription.prescriptionId = :pid"
+        )
+        .setParameter("pid", prescription.getPrescriptionId())
+        .list();
+        session.close();
+        return tests;
+    }
+    
+//    public List<Subscribe> getSubscriptionsByHid(String hId) {
+//        Session session = sessionFactory.openSession();
+//        @SuppressWarnings("unchecked")
+//        List<Subscribe> list = session.createQuery(
+//            "FROM Subscribe WHERE recipient.hId = :hId")
+//            .setParameter("hId", hId)
+//            .list();
+//        session.close();
+//        return list;
+//    }
+//    
+//    public InsuranceCoverageOption getCoverageBySubscription(Subscribe sub) {
+//        Session session = sessionFactory.openSession();
+//        InsuranceCoverageOption option = (InsuranceCoverageOption) session.createQuery(
+//            "FROM InsuranceCoverageOption WHERE coverageId = :cid")
+//            .setParameter("cid", sub.getCoverage().getCoverageId())
+//            .uniqueResult();
+//        session.close();
+//        return option;
+//    }
+//    
+//    public InsurancePlan getPlanByCoverage(InsuranceCoverageOption option) {
+//        Session session = sessionFactory.openSession();
+//        InsurancePlan plan = (InsurancePlan) session.createQuery(
+//            "FROM InsurancePlan WHERE planId = :pid")
+//            .setParameter("pid", option.getInsurancePlan().getPlanId())
+//            .uniqueResult();
+//        session.close();
+//        return plan;
+//    }
+//    
+//    public InsuranceCompany getCompanyByPlan(InsurancePlan plan) {
+//        Session session = sessionFactory.openSession();
+//        InsuranceCompany company = (InsuranceCompany) session.createQuery(
+//            "FROM InsuranceCompany WHERE companyId = :cid")
+//            .setParameter("cid", plan.getInsuranceCompany().getCompanyId())
+//            .uniqueResult();
+//        session.close();
+//        return company;
+//    }
+//    
+    
+    
+    public List<Subscribe> getActiveSubscriptionsByRecipient(String hId) {
+        Session session = sessionFactory.openSession();
+        @SuppressWarnings("unchecked")
+		List<Subscribe> subscriptions = session.createQuery(
+				"FROM Subscribe s " +
+				        "JOIN FETCH s.coverage c " +
+				        "JOIN FETCH c.insurancePlan p " +
+				        "JOIN FETCH p.insuranceCompany comp " +
+				        "WHERE s.recipient.hId = :hId " +
+				        "AND s.status = 'ACTIVE' " +
+				        "AND s.expiryDate > :today")
+				        .setParameter("hId", hId)
+				        .setParameter("today", new java.util.Date())
+            .list();
+        session.close();
+        return subscriptions;
+    }
+
+    @Override
+    public Claims fileClaim(Claims claim, ClaimHistory history) {
+        Session session = SessionHelper.getSessionFactory().openSession();
+        Transaction trans = session.beginTransaction();
+
+        try {
+            String nextClaimId = getNextClaimId(session);
+            String nextClaimHistoryId = getNextClaimHistoryId(session);
+
+            claim.setClaimId(nextClaimId);
+            history.setClaimHistoryId(nextClaimHistoryId);
+
+            // Save the claim and its history
+            session.save(claim);
+            session.save(history);
+
+            // 🛠 Update remaining coverage in Subscribe table
+            String subscribeId = claim.getCoverage().getSubscribeId(); // assuming this exists in your Claims model
+            Subscribe subscription = (Subscribe) session.get(Subscribe.class, subscribeId);
+
+            if (subscription != null) {
+                double currentAmount = subscription.getRemainingCoverageAmount();
+                double claimAmount = claim.getAmountClaimed().doubleValue();
+
+                double updatedAmount = currentAmount - claimAmount;
+                subscription.setRemainingCoverageAmount(updatedAmount); // prevent negative values
+
+                session.update(subscription);
+            }
+
+            trans.commit();
+        } catch (Exception e) {
+            trans.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+
+        return claim;
+    }
+
+
+	@Override
+	public List<MedicalProcedure> showUnclaimedProcedure() {
+	    Session session = sessionFactory.openSession();
+	    
+	    // Fetch procedures that do NOT have a matching entry in the Claims table
+	    @SuppressWarnings("unchecked")
+	    List<MedicalProcedure> list = session.createQuery(
+	    		"SELECT mp FROM MedicalProcedure mp " +
+	    		        "JOIN FETCH mp.provider " +
+	    		        "JOIN FETCH mp.doctor " +
+	    		        "JOIN FETCH mp.recipient " +
+	    		        "WHERE mp.procedureId NOT IN (SELECT c.procedure.procedureId FROM Claims c)"
+	    ).list();
+//	    System.out.println("List size : " + list.size());
+	    session.close();
+	    return list;
+	}
+
+	public List<PendingOrDeniedClaimDTO> showPendingClaimsDao() {
+		Session session = sessionFactory.openSession();
+
+	    @SuppressWarnings("unchecked")
+	    List<Object[]> rows = session.createQuery(
+	        "SELECT c.claimId, c.coverage.subscribeId, c.procedure.procedureId, " +
+	        "c.provider.providerId, c.recipient.hId, c.claimStatus, c.claimDate, " +
+	        "c.amountClaimed, c.amountApproved, h.description, h.actionDate " +
+	        "FROM Claims c LEFT JOIN c.claimHistories h " +
+	        "WHERE c.claimStatus IN ('PENDING', 'DENIED') " +
+	        "AND (c.claimStatus != 'DENIED' OR h.actionDate = " +
+	        "     (SELECT MAX(h2.actionDate) FROM ClaimHistory h2 WHERE h2.claim.claimId = c.claimId))"
+	    ).list();
+
+	    List<PendingOrDeniedClaimDTO> pendingOrDeniedClaims = new ArrayList<>();
+
+	    for (Object[] row : rows) {
+	        PendingOrDeniedClaimDTO dto = new PendingOrDeniedClaimDTO();
+	        dto.setClaimId((String) row[0]);
+	        dto.setSubscribeId((String) row[1]);
+	        dto.setProcedureId((String) row[2]);
+	        dto.setProviderId((String) row[3]);
+	        dto.setHealthId((String) row[4]);
+	        dto.setClaimStatus(((ClaimStatus) row[5]).name());
+	        dto.setClaimDate((Timestamp) row[6]);
+	        dto.setAmountClaimed((BigDecimal) row[7]);
+	        dto.setAmountApproved((BigDecimal) row[8]);
+	        dto.setDescription((String) row[9]);
+	        dto.setActionDate((Timestamp) row[10]);
+
+	        pendingOrDeniedClaims.add(dto);
+	    }
+
+	    session.close();
+	    return pendingOrDeniedClaims;
+	}
+
+	@Override
+    public Claims findByClaimId(String ClaimId) {
+        Session session = sessionFactory.openSession();
+        Claims claim = (Claims) session.get(Recipient.class, claimId);
+        session.close();
+        return recipient;
+    }
+
+
+}

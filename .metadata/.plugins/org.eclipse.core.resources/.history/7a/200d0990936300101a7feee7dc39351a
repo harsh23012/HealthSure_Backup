@@ -1,0 +1,141 @@
+/* style.css */
+
+.body-bg {
+    background-color: #f3f4f6;
+    padding-top: 5rem;
+    font-family: sans-serif;
+}
+
+.section-wrapper {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+}
+
+.welcome-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e3a8a;
+}
+
+.subtitle-text {
+    color: #4b5563;
+    margin-top: 0.25rem;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .metrics-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.card {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.card-title.purple { color: #9333ea; }
+.card-title.green { color: #16a34a; }
+.card-title.teal { color: #14b8a6; }
+
+.card-value {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-top: 0.5rem;
+}
+
+.card-desc {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+.quote-box {
+    background-color: #eef2ff;
+    border-left: 4px solid #818cf8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.quote-text {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: #3730a3;
+}
+
+.quick-actions-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .actions-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .actions-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.action-btn {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-blue { background-color: #2563eb; }
+.btn-blue:hover { background-color: #1d4ed8; }
+
+.btn-purple { background-color: #9333ea; }
+.btn-purple:hover { background-color: #7e22ce; }
+
+.btn-green { background-color: #16a34a; }
+.btn-green:hover { background-color: #15803d; }
+
+.btn-pink { background-color: #ec4899; }
+.btn-pink:hover { background-color: #db2777; }
+
+.btn-indigo { background-color: #4f46e5; }
+.btn-indigo:hover { background-color: #4338ca; }

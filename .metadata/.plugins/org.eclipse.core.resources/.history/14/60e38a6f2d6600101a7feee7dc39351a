@@ -1,0 +1,158 @@
+/* 🧼 Base Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #1f2937;
+}
+
+/* 📦 Container Centering */
+.dashboard-container {
+    width: 70%;
+    margin: 3rem auto 2rem auto;
+    text-align: center;
+}
+
+/* 👋 Welcome */
+.welcome-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+.subtext {
+    font-size: 1rem;
+    color: #4b5563;
+}
+
+/* 📊 Metrics Section */
+.metrics-section {
+    width: 70%;
+    margin: 0 auto 2rem auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+/* 🧩 Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+@media (min-width: 640px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (min-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 🧠 Card Styling */
+.card {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+.card-value {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    color: #1f2937;
+}
+.card-note {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* 💡 Insight */
+.insight-box {
+    width: 70%;
+    margin: 2rem auto;
+    background-color: #eff6ff;
+    border-left: 5px solid #3b82f6;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+.insight-text {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: #1e3a8a;
+}
+
+/* 🚀 Quick Actions Section */
+.quick-actions {
+    width: 70%;
+    margin: 2rem auto 4rem auto;
+    text-align: center;
+}
+.quick-actions-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+/* 🎯 Action Grid */
+.action-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .action-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .action-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 🔘 Action Buttons */
+.action-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.action-button:hover {
+    transform: scale(1.02);
+}
+
+/* 🎨 Button Colors */
+.btn-blue    { background-color: #2563eb; }
+.btn-blue:hover    { background-color: #1d4ed8; }
+
+.btn-green   { background-color: #16a34a; }
+.btn-green:hover   { background-color: #15803d; }
+
+.btn-purple  { background-color: #7e22ce; }
+.btn

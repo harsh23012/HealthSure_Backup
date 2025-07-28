@@ -1,0 +1,100 @@
+/* Base and Layout */
+html, body {
+    height: 100%;
+    margin-top: 2rem;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Wrapper and Centering */
+.dashboard-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+}
+
+/* Container Box */
+.dashboard-container {
+    width: 100%;
+    max-width: 740px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title */
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 2.5rem;
+}
+
+/* Grid of Buttons */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+/* Individual Button Panel */
+.dashboard-btn {
+    background-color: #2563eb;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Command Button Style */
+.button-text {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-btn:hover {
+    background-color: #1e40af;
+    transform: scale(1.02);
+}
+
+/* Description Text */
+.button-desc {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: #e0e7ff;
+    text-align: center;
+    max-width: 85%;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .dashboard-container {
+        margin: 0;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .button-text {
+        font-size: 1.1rem;
+    }
+
+    .button-desc {
+        font-size: 0.8rem;
+    }
+}

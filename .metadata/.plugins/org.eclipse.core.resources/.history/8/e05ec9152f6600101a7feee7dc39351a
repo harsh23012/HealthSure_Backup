@@ -1,0 +1,138 @@
+/* 🌐 Base Styling */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to right, #eef2ff, #f9fafb);
+    color: #1f2937;
+    padding-top: 4rem;
+}
+
+/* 🧭 Welcome Section */
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.dashboard-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1e3a8a;
+}
+.dashboard-header p {
+    font-size: 1rem;
+    color: #4b5563;
+}
+
+/* 📊 Metrics Section */
+.metrics-wrapper {
+    width: 75%;
+    margin: 0 auto 3rem auto;
+}
+.metrics-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.info-card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: center;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+.info-card:hover {
+    transform: translateY(-4px);
+}
+.info-card h3 {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #374151;
+}
+.value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+.info-card span {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Section Colors */
+.blue   { border-top: 5px solid #3b82f6; }
+.green  { border-top: 5px solid #10b981; }
+.violet { border-top: 5px solid #8b5cf6; }
+.red    { border-top: 5px solid #ef4444; }
+
+/* 💡 Insight Box */
+.quote-box {
+    width: 75%;
+    margin: 2rem auto;
+    background-color: #e0f2fe;
+    border-left: 6px solid #3b82f6;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.quote-text {
+    font-style: italic;
+    color: #1e3a8a;
+    font-size: 0.875rem;
+}
+
+/* 🚀 Actions */
+.actions-wrapper {
+    width: 80%;
+    margin: 3rem auto 5rem auto;
+    text-align: center;
+}
+.actions-wrapper h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+.actions-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* 🎯 Action Buttons */
+.action-btn {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 1rem;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.action-btn:hover {
+    transform: scale(1.03);
+}
+
+/* 🎨 Button Colors */
+.btn-blue    { background-color: #2563eb; }
+.btn-blue:hover    { background-color: #1d4ed8; }
+
+.btn-green   { background-color: #16a34a; }
+.btn-green:hover   { background-color: #15803d; }
+
+.btn-purple  { background-color: #7e22ce; }
+.btn-purple:hover  { background-color: #6b21a8; }
+
+.btn-pink    { background-color: #db2777; }
+.btn-pink:hover    { background-color: #be185d; }
+
+.btn-indigo  { background-color: #4338ca; }
+.btn-indigo:hover  { background-color: #3730a3; }
+
+.btn-teal    { background-color: #14b8a6; }
+.btn-teal:hover    { background-color: #0f766e; }
+
+.btn-fuchsia { background-color: #c026d3; }
+.btn-fuchsia:hover { background-color: #a21caf; }

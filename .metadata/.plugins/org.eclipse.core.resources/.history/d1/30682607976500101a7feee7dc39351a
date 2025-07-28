@@ -1,0 +1,103 @@
+/* 🌐 Global Layout */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 💠 Wrapper for Centering */
+.dashboard-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem 1rem;
+}
+
+/* 📦 Main Dashboard Container */
+.dashboard-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 🏷️ Title */
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 2rem;
+}
+
+/* 🧱 Grid Layout for 2x2 Buttons */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+/* 🖱️ Whole-Block Buttons */
+.dashboard-btn {
+    background-color: #2563eb;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    padding: 1.5rem;
+    color: white;
+    text-align: left;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+}
+
+/* 🧩 Inner Content Styling */
+.button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* 📌 Button Label */
+.button-label {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* 📝 Button Description */
+.button-desc {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: #e0e7ff;
+}
+
+/* 🌀 Hover Effects */
+.dashboard-btn:hover {
+    background-color: #1e40af;
+    transform: scale(1.02);
+}
+
+/* 📱 Responsive Layout */
+@media (max-width: 700px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .button-label {
+        font-size: 1.1rem;
+    }
+
+    .button-desc {
+        font-size: 0.8rem;
+    }
+}

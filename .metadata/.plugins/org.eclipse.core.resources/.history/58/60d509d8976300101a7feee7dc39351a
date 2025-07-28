@@ -1,0 +1,123 @@
+body {
+    background-color: #f3f4f6;
+    padding: 5rem;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+/* Layout Container */
+.container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Headings */
+.section-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e3a8a;
+    text-align: center;
+}
+
+.subtext {
+    color: #4b5563;
+    margin-top: 0.25rem;
+    text-align: center;
+}
+
+/* Grid system */
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.grid-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Card design */
+.dashboard-card {
+    background-color: #fff;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+}
+
+.dashboard-card h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-card p {
+    font-size: 2.25rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.dashboard-card small {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Colored headings */
+.blue { color: #3b82f6; }
+.green { color: #16a34a; }
+.purple { color: #8b5cf6; }
+.red { color: #ef4444; }
+
+/* Buttons */
+.action-button {
+    width: 100%;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.blue-bg { background-color: #2563eb; }
+.green-bg { background-color: #059669; }
+.purple-bg { background-color: #7c3aed; }
+.pink-bg { background-color: #db2777; }
+.indigo-bg { background-color: #4f46e5; }
+.teal-bg { background-color: #14b8a6; }
+.fuchsia-bg { background-color: #c026d3; }
+
+.action-button:hover {
+    filter: brightness(0.95);
+}
+
+/* Quote box */
+.quote-box {
+    background-color: #eff6ff;
+    border-left: 4px solid #60a5fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.quote-box p {
+    font-style: italic;
+    color: #1e40af;
+    font-size: 0.875rem;
+}

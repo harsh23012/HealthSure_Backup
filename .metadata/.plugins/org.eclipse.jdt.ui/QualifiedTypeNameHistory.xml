@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="org.hibernate.Query"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.util.SessionHelper"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.recipient.model.Recipient"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.dao.ClaimDao"/>
+    <fullyQualifiedTypeName name="javax.faces.context.FacesContext"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpSession"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.model.MedicalProcedure"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.model.Prescription"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.model.PrescribedMedicines"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.model.ProcedureTest"/>
+    <fullyQualifiedTypeName name="jakarta.annotation.PostConstruct"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.insurance.model.InsurancePlan"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.insurance.model.Subscribe"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.util.MailSend"/>
+    <fullyQualifiedTypeName name="java.math.BigDecimal"/>
+    <fullyQualifiedTypeName name="com.infinite.jsf.provider.dto.PendingOrDeniedClaimDTO"/>
+    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+</qualifiedTypeNameHistroy>
