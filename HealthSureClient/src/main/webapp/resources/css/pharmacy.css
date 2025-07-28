@@ -6,8 +6,7 @@ body {
 
 .container {
     max-width: 80rem;
-    margin-left: 10% ;
-    margin-right: 10%;
+    margin: 0 10%;
     padding: 1.5rem;
 }
 

@@ -8,8 +8,7 @@ body {
 /* Container */
 .container {
     max-width: 1200px;
-    margin-left: 10%;
-    margin-right:10%;
+    margin: 0 10%;
     padding: 1rem;
 }
 
