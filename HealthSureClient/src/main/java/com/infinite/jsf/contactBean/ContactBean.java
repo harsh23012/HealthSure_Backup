@@ -76,6 +76,6 @@ public class ContactBean {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to send message: " + result));
         }
 
-        return null;
+        return "contactConfirm.jsp?faces-redirect=true";
     }
 }
