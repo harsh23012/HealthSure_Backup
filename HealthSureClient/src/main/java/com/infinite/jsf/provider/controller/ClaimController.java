@@ -46,6 +46,8 @@ public class ClaimController {
 	private String sortField = "procedureId"; // default sort field
 	private boolean ascending = true;
 	
+	//============Getter & Setter================//
+	
 	public String getSortField() {
 	    return sortField;
 	}
@@ -127,6 +129,7 @@ public class ClaimController {
 	public void setClaimDao(ClaimDao claimDao) {
 		this.claimDao = claimDao;
 	}
+
 	
 	public void sortBy(String field) {
 	    if (field.equals(this.sortField)) {
@@ -138,6 +141,7 @@ public class ClaimController {
 	    page = 0; // reset to first page
 	}
 
+	//Searching unclaimed procedures
 	
 	public String searchUnclaimedProcedure() {
 		unclaimedProcedures = claimDao.showUnclaimedProcedure();
@@ -149,6 +153,8 @@ public class ClaimController {
 		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
 	}
 	
+	//Getting paginated and shorted unclaimed procedure 
+	
 	public List<MedicalProcedure> getPaginatedUnclaimedProcedures() {
 	    if (unclaimedProcedures == null) {
 	        searchUnclaimedProcedure(); // lazy load
@@ -158,7 +164,7 @@ public class ClaimController {
 	        return Collections.emptyList();
 	    }
 
-	    // 🔀 Apply sorting using if-else
+	    // Apply sorting using if-else
 	    Comparator<MedicalProcedure> comparator;
 
 	    if ("procedureId".equals(sortField)) {
@@ -182,7 +188,7 @@ public class ClaimController {
 	    List<MedicalProcedure> sortedList = new java.util.ArrayList<>(unclaimedProcedures);
 	    Collections.sort(sortedList, comparator);
 
-	    // 📄 Apply pagination
+	    // Apply pagination
 	    int fromIndex = page * pageSize;
 	    if (fromIndex >= sortedList.size()) {
 	        page = 0;
@@ -238,6 +244,7 @@ public class ClaimController {
 	
 	
 	
+	// Searching and viewing all the details of that procedure details like recipient, medical procedure, prescription, medicines and tests details all
 	
 	public String searchRecipient(MedicalProcedure procedure) {
 		System.out.println("Recipient id : " + procedure.getRecipient().gethId());
@@ -277,7 +284,7 @@ public class ClaimController {
 	    }
 	}
 	
-	
+	// fetching all the plans in which recipient is enrolled
 	public String showPlans() {
 		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(true);
@@ -296,6 +303,8 @@ public class ClaimController {
 			return "selectInsurancePlan.jsp?faces-redirect=true";
 		}
 	}
+	
+	// after selecting plan redirected to initiate claim with some amount
 	
 	public String selectPlan(String subscribeId) {
 //		System.out.println("Requested subscribeId: " + subscribeId);
@@ -329,7 +338,7 @@ public class ClaimController {
 	    }
 	}
 	
-	
+	// For filing claim application to get the insurance claimed by the provider and all validations are here for claiming
 	public String submitClaim() {
 	    HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 	            .getExternalContext().getSession(true);

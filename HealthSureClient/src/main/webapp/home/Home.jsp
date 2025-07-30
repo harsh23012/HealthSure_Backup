@@ -325,5 +325,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     counters.forEach(counter => observer.observe(counter));
 });
+
+	window.onload = function() {
+	    const params = new URLSearchParams(window.location.search);
+	    if (params.get("scrollTo") === "contact") {
+	        document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+	    }
+	};
 </script>
 </html>

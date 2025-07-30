@@ -32,28 +32,23 @@ public class ContactBean {
         // ✅ Manual Validation
         if (name == null || name.trim().isEmpty()) {
             context.addMessage("name", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name is required", null));
-            return null;
-        }
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        }
 
         if (email == null || email.trim().isEmpty()) {
             context.addMessage("email", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email is required", null));
-            return null;
-        }
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        }
 
         if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")) {
             context.addMessage("email", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid email format", null));
-            return null;
-        }
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        }
 
         if (subject == null || subject.trim().isEmpty()) {
             context.addMessage("subject", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Subject is required", null));
-            return null;
-        }
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        }
 
         if (message == null || message.trim().isEmpty()) {
             context.addMessage("message", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Message is required", null));
-            return null;
-        }
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        }
 
         // ✅ Compose Message
         String fullMessage = 
@@ -71,11 +66,12 @@ public class ContactBean {
         String result = MailSend.sendInfo("infinitehealthsure@gmail.com", subject, fullMessage);
 
         if (result.contains("Successfully")) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Your message has been sent."));
-        } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to send message: " + result));
+        	return "contactConfirm.jsp?faces-redirect=true";
+        } 
+        else {
+            return "Home.jsp?faces-redirect=true&scrollTo=contact";        
         }
 
-        return "contactConfirm.jsp?faces-redirect=true";
+        
     }
 }

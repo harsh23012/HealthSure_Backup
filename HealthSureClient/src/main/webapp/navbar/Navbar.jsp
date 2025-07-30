@@ -40,7 +40,6 @@
             <div class="dropdown">
                 <button class="dropdown-button signup-btn">Signup ▾</button>
                 <ul class="dropdown-menu">
-                    <li><a href="adminSignup.jsp">Admin</a></li>
                     <li><a href="providerSignup.jsp">Provider</a></li>
                     <li><a href="recipientSignup.jsp">Recipient</a></li>
                     <li><a href="/HealthSureClient/pharmacy/AddOwner.jsf">Pharmacy</a></li>

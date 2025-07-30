@@ -38,6 +38,10 @@
                 <h:form>
                     <h:commandButton value="Reset Password" action="#{authBean.resetPassword}" styleClass="button-yellow" />
                 </h:form>
+                <h:form>
+                    <h:commandButton value="Register as Admin" action="#{authBean.resetPassword}" styleClass="button-red" />
+                </h:form>
+                
             </div>
         </div>
     </div>

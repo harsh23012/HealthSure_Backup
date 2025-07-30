@@ -115,7 +115,7 @@
                                  action="#{providerBean.createClaim}"
                                  styleClass="action-button btn-fuchsia" />
             </h:form>
-
+           
         </div>
     </div>
 
