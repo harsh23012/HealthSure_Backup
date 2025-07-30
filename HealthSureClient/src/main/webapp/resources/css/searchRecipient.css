@@ -54,7 +54,7 @@ body {
     cursor: pointer;
 }
 
-.claim-btn {
+.btn {
     display: inline-block;
     margin-top: 1.5rem;
     background-color: #16a34a; /* Tailwind's green-600 */

@@ -109,13 +109,13 @@
                 <div style="text-align: center;">
                     <h:commandButton value="🧾 Claim Insurance for This Recipient"
                                      action="#{claimController.showPlans}"
-                                     styleClass="claim-btn" />
+                                     styleClass="btn" />
                 </div>
                 
                 <div style="text-align:center; margin-top:8px;">
                     <h:commandButton style="background-color: #4b5563; color: white;" value="Back to Procedure Details"
                                      action="ShowMedicalProcedureToClaim"
-                                     styleClass="claim-btn" />
+                                     styleClass="btn" />
                     
                 </div>
             </h:form>
