@@ -1,10 +1,12 @@
 package com.infinite.jsf.provider.controller;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -45,8 +47,56 @@ public class ClaimController {
 	private int pageSize = 5;
 	private String sortField = "procedureId"; // default sort field
 	private boolean ascending = true;
+	private String searchProcedureId;
+	private String searchClaimId;
+	private String searchClaimStatus;
+	private Date searchActionDateFrom;
+	private Date searchActionDateTo;
+
+
 	
 	//============Getter & Setter================//
+	
+	
+	public String getSearchProcedureId() {
+		return searchProcedureId;
+	}
+	
+	public String getSearchClaimId() {
+		return searchClaimId;
+	}
+
+	public void setSearchClaimId(String searchClaimId) {
+		this.searchClaimId = searchClaimId;
+	}
+
+	public String getSearchClaimStatus() {
+		return searchClaimStatus;
+	}
+
+	public void setSearchClaimStatus(String searchClaimStatus) {
+		this.searchClaimStatus = searchClaimStatus;
+	}
+
+	public Date getSearchActionDateFrom() {
+		return searchActionDateFrom;
+	}
+
+	public void setSearchActionDateFrom(Date searchActionDateFrom) {
+		this.searchActionDateFrom = searchActionDateFrom;
+	}
+
+	public Date getSearchActionDateTo() {
+		return searchActionDateTo;
+	}
+
+	public void setSearchActionDateTo(Date searchActionDateTo) {
+		this.searchActionDateTo = searchActionDateTo;
+	}
+
+	public void setSearchProcedureId(String searchProcedureId) {
+		this.searchProcedureId = searchProcedureId;
+	}
 	
 	public String getSortField() {
 	    return sortField;
@@ -153,6 +203,18 @@ public class ClaimController {
 		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
 	}
 	
+	public String clearSearch() {
+	    this.searchProcedureId = null;
+	    return null;
+	}
+	
+	public String searchByProcedureId() {
+	    // You don't need to do anything here if filtering is handled in the getter
+		System.err.println("search method is called.");
+	    return null; // Stay on the same page
+	}
+
+	
 	//Getting paginated and shorted unclaimed procedure 
 	
 	public List<MedicalProcedure> getPaginatedUnclaimedProcedures() {
@@ -164,9 +226,18 @@ public class ClaimController {
 	        return Collections.emptyList();
 	    }
 
-	    // Apply sorting using if-else
-	    Comparator<MedicalProcedure> comparator;
+	    // 🔎 Filter by Procedure ID if search is active
+	    List<MedicalProcedure> filteredList;
+	    if (searchProcedureId != null && !searchProcedureId.trim().isEmpty()) {
+	        filteredList = unclaimedProcedures.stream()
+	            .filter(p -> String.valueOf(p.getProcedureId()).contains(searchProcedureId.trim()))
+	            .collect(Collectors.toList());
+	    } else {
+	        filteredList = new ArrayList<>(unclaimedProcedures);
+	    }
 
+	    // 🧮 Apply sorting
+	    Comparator<MedicalProcedure> comparator;
 	    if ("procedureId".equals(sortField)) {
 	        comparator = Comparator.comparing(MedicalProcedure::getProcedureId);
 	    } else if ("diagnosis".equals(sortField)) {
@@ -185,20 +256,20 @@ public class ClaimController {
 	        comparator = comparator.reversed();
 	    }
 
-	    List<MedicalProcedure> sortedList = new java.util.ArrayList<>(unclaimedProcedures);
-	    Collections.sort(sortedList, comparator);
+	    Collections.sort(filteredList, comparator);
 
-	    // Apply pagination
+	    // 📄 Apply pagination
 	    int fromIndex = page * pageSize;
-	    if (fromIndex >= sortedList.size()) {
+	    if (fromIndex >= filteredList.size()) {
 	        page = 0;
 	        fromIndex = 0;
 	    }
 
-	    int toIndex = Math.min(fromIndex + pageSize, sortedList.size());
-	    paginatedUnclaimedProcedures = sortedList.subList(fromIndex, toIndex);
+	    int toIndex = Math.min(fromIndex + pageSize, filteredList.size());
+	    paginatedUnclaimedProcedures = filteredList.subList(fromIndex, toIndex);
 	    return paginatedUnclaimedProcedures;
 	}
+
 
 	
 	//=========================Pagination of searchUnclaimedProcedure ===========================
@@ -490,6 +561,21 @@ public class ClaimController {
 	    }
 	    page = 0;
 	}
+	
+	public String searchClaims() {
+	    // You don't need to do anything here if filtering is handled in the getter
+		System.err.println("search by claims method is called.");
+	    return null; // Stay on the same page
+	}
+	
+	public String clearSearchClaims() {
+	    searchClaimId = null;
+	    searchProcedureId = null;
+	    searchClaimStatus = null;
+	    showPendingClaims(); // reload full list
+	    return "ShowPendingOrDeclinedClaims.jsp?faces-redirect=true";
+	}
+
 
 	public List<PendingOrDeniedClaimDTO> getPaginatedPendingOrDeclinedClaim() {
 	    if (pendingOrDeclinedClaim == null) {
@@ -500,33 +586,56 @@ public class ClaimController {
 	        return Collections.emptyList();
 	    }
 
-	    Comparator<PendingOrDeniedClaimDTO> comparator;
+	    // 🔍 Apply search filters
+	    List<PendingOrDeniedClaimDTO> filteredList = pendingOrDeclinedClaim.stream()
+	        .filter(c -> searchClaimId == null || searchClaimId.trim().isEmpty() ||
+	                     String.valueOf(c.getClaimId()).contains(searchClaimId.trim()))
+	        .filter(c -> searchProcedureId == null || searchProcedureId.trim().isEmpty() ||
+	                     String.valueOf(c.getProcedureId()).contains(searchProcedureId.trim()))
+	        .filter(c -> searchClaimStatus == null || searchClaimStatus.trim().isEmpty() ||
+	                     c.getClaimStatus().equalsIgnoreCase(searchClaimStatus.trim()))
+	        .collect(Collectors.toList());
 
-	    if ("claimId".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
-	    } else if ("procedureId".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getProcedureId);
-	    } else if ("amountClaimed".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountClaimed);
-	    } else if ("amountApproved".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountApproved);
-	    } else if ("claimStatus".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimStatus, String.CASE_INSENSITIVE_ORDER);
-	    } else if ("description".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getDescription, String.CASE_INSENSITIVE_ORDER);
-	    } else if ("actionDate".equals(sortField1)) {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getActionDate);
-	    } else {
-	        comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
+	    if (filteredList.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+
+	    // 🔃 Sorting
+	    Comparator<PendingOrDeniedClaimDTO> comparator;
+	    switch (sortField1) {
+	        case "claimId":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
+	            break;
+	        case "procedureId":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getProcedureId);
+	            break;
+	        case "amountClaimed":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountClaimed);
+	            break;
+	        case "amountApproved":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getAmountApproved);
+	            break;
+	        case "claimStatus":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimStatus, String.CASE_INSENSITIVE_ORDER);
+	            break;
+	        case "description":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getDescription, String.CASE_INSENSITIVE_ORDER);
+	            break;
+	        case "actionDate":
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getActionDate);
+	            break;
+	        default:
+	            comparator = Comparator.comparing(PendingOrDeniedClaimDTO::getClaimId);
 	    }
 
 	    if (!ascending1) {
 	        comparator = comparator.reversed();
 	    }
 
-	    List<PendingOrDeniedClaimDTO> sortedList = new ArrayList<>(pendingOrDeclinedClaim);
-	    Collections.sort(sortedList, comparator);
+	    List<PendingOrDeniedClaimDTO> sortedList = new ArrayList<>(filteredList);
+	    sortedList.sort(comparator);
 
+	    // 📄 Pagination
 	    int fromIndex = page * pageSize;
 	    if (fromIndex >= sortedList.size()) {
 	        page = 0;

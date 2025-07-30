@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <title>Available Procedures for Claim</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedureToClaim.css" />
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedure.css" />
 </head>
 <body>
 <f:view>
@@ -17,7 +17,16 @@
     <div class="page-container">
 
         <h1 class="page-title">Unclaimed Medical Procedures</h1>
-        
+        <!-- 🔍 Search Section -->
+        <h:form>
+         <h3 class="search-title">🔍 Filter Procedures</h3>
+		<div class="search-container">
+		    <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />
+		    <h:inputText id="searchProcId" value="#{claimController.searchProcedureId}" styleClass="search-input" />
+		    <h:commandButton value="Search" action="#{claimController.searchByProcedureId}" styleClass="search-btn"/>
+		    <h:commandButton value="Clear" action="#{claimController.clearSearch}" styleClass="clear-btn"/>
+		</div>
+		</h:form>
         <h:form>
             <h:dataTable value="#{claimController.paginatedUnclaimedProcedures}" var="proc"
                          styleClass="table-style"
@@ -51,8 +60,9 @@
 					        <h:outputText value="#{claimController.sortField eq 'procedureDate' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
 					    </h:commandLink>
 					</f:facet>
-
-                    <h:outputText value="#{proc.procedureDate}" />
+					<h:outputText value="#{proc.procedureDate}">
+						    <f:convertDateTime pattern="yyyy-MM-dd" />
+					</h:outputText>
                 </h:column>
 
                 <h:column>

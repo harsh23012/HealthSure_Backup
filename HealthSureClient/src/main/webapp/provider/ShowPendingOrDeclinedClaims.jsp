@@ -5,7 +5,8 @@
 <html>
 <head>
     <title>Pending & Declined Claims</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingOrDeclinedClaims.css" />
+     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingClaims.css" />
+    
 </head>
 <f:view>
 <body>
@@ -16,10 +17,44 @@
     </div>
 
     <!-- Claims Panel -->
-    <h:panelGroup rendered="#{not empty claimController.paginatedPendingOrDeclinedClaim}">
         <div class="page-wrapper">
             <h2 class="page-title">Pending & Declined Claims</h2>
+            <h:form>
+			    <div class="search-card">
+			        <h3 class="search-title">🔍 Filter Claims</h3>
+			
+			        <div class="search-fields">
+			            <div class="search-field">
+			                <label for="claimId">Claim ID</label>
+			                <h:inputText id="claimId" value="#{claimController.searchClaimId}" />
+			            </div>
+			
+			            <div class="search-field">
+			                <label for="procedureId">Procedure ID</label>
+			                <h:inputText id="procedureId" value="#{claimController.searchProcedureId}" />
+			            </div>
+			
+			            <div class="search-field">
+			                <label for="claimStatus">Claim Status</label>
+			                <h:selectOneMenu id="claimStatus" value="#{claimController.searchClaimStatus}">
+			                    <f:selectItem itemLabel="-- Select --" itemValue="" />
+			                    <f:selectItem itemLabel="Pending" itemValue="Pending" />
+			                    <f:selectItem itemLabel="Declined" itemValue="Declined" />
+			                </h:selectOneMenu>
+			            </div>
+			
 
+			        </div>
+			
+			        <div class="search-actions">
+			            <h:commandButton value="Search" action="#{claimController.searchClaims}" styleClass="search-btn" />
+			            <h:commandButton value="Clear" action="#{claimController.clearSearchClaims}" styleClass="clear-btn" />
+			        </div>
+			    </div>
+			</h:form>
+   
+
+		    <h:panelGroup rendered="#{not empty claimController.paginatedPendingOrDeclinedClaim}">
             <h:form>
                 <h:dataTable value="#{claimController.paginatedPendingOrDeclinedClaim}" var="claim"
                              styleClass="data-table">
@@ -77,11 +112,13 @@
                     <h:column>
 						<f:facet name="header">
 						    <h:commandLink action="#{claimController.sortByPendingClaim('actionDate')}">
-						        <h:outputText value="Action Date & Time" />
+						        <h:outputText value="Action Date" />
 						        <h:outputText value="#{claimController.sortField1 eq 'actionDate' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
 						    </h:commandLink>
 						</f:facet>
-                        <h:outputText value="#{claim.actionDate}" />
+                        <h:outputText value="#{claim.actionDate}">
+						    <f:convertDateTime pattern="yyyy-MM-dd" />
+						</h:outputText>
                     </h:column>
                     <h:column>
                         <f:facet name="header"><h:outputText value="Action" /></f:facet>
