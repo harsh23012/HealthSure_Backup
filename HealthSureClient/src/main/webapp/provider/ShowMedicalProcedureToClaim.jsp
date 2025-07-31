@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <title>Available Procedures for Claim</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedure.css" />
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedures.css" />
 </head>
 <body>
 <f:view>
@@ -15,88 +15,158 @@
 
     <!-- 📋 Page Container -->
     <div class="page-container">
-
         <h1 class="page-title">Unclaimed Medical Procedures</h1>
+
         <!-- 🔍 Search Section -->
         <h:form>
-         <h3 class="search-title">🔍 Filter Procedures</h3>
-		<div class="search-container">
-		    <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />
-		    <h:inputText id="searchProcId" value="#{claimController.searchProcedureId}" styleClass="search-input" />
-		    <h:commandButton value="Search" action="#{claimController.searchByProcedureId}" styleClass="search-btn"/>
-		    <h:commandButton value="Clear" action="#{claimController.clearSearch}" styleClass="clear-btn"/>
-		</div>
-		</h:form>
+            <div class="search-container">
+                <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />
+                <h:inputText id="searchProcId" value="#{claimController.searchProcedureId}" styleClass="search-input" />
+                <h:commandButton value="Search" action="#{claimController.searchByProcedureId}" styleClass="search-btn"/>
+                <h:commandButton value="Clear" action="#{claimController.clearSearch}" styleClass="clear-btn"/>
+            </div>
+        </h:form>
+
+        <!-- 📊 Data Table -->
         <h:form>
-            <h:dataTable value="#{claimController.paginatedUnclaimedProcedures}" var="proc"
-                         styleClass="table-style"
-                         headerClass=""
-                         rowClasses="">
-                <h:column>
-                        <f:facet name="header">
-    						<h:commandLink action="#{claimController.sortBy('procedureId')}" styleClass="sortable-header">
-					        <h:outputText value="Procedure ID" />
-					        <h:outputText value="#{claimController.sortField eq 'procedureId' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
-					    </h:commandLink>
-					</f:facet>
-                    <h:outputText value="#{proc.procedureId}" />
-                </h:column>
+            <h:panelGroup rendered="#{not empty claimController.paginatedUnclaimedProcedures}">
+                <div class="table-container">
+                    <h:dataTable value="#{claimController.paginatedUnclaimedProcedures}" var="proc"
+                                 styleClass="table-style">
 
-                <h:column>
-                    <f:facet name="header">
-					    <h:commandLink action="#{claimController.sortBy('diagnosis')}" styleClass="sortable-header">
-					        <h:outputText value="Diagnosis" />
-					        <h:outputText value="#{claimController.sortField eq 'diagnosis' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
-					    </h:commandLink>
-					</f:facet>
+                        <!-- Procedure ID Column -->
+                        <h:column>
+                            <f:facet name="header">
+                                <h:panelGroup styleClass="h-panelgroup">
+                                    <h:outputText value="Procedure Id" />
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                        <h:commandLink action="#{claimController.sortByAsc('proc.procedureId')}"
+                                                       rendered="#{claimController.renderSortButton('proc.procedureId','asc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                            width="10" height="10" title="sort-ascending"/>
+                                        </h:commandLink>
+                                        <h:commandLink action="#{claimController.sortByDesc('proc.procedureId')}"
+                                                       rendered="#{claimController.renderSortButton('proc.procedureId','desc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/down-arrow.png"
+                                                            width="10" height="10" title="sort-descending"/>
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </f:facet>
+                            <h:outputText value="#{proc.procedureId}" />
+                        </h:column>
 
-                    <h:outputText value="#{proc.diagnosis}" />
-                </h:column>
+                        <!-- Diagnosis Column -->
+                        <h:column>
+                            <f:facet name="header">
+                                <h:panelGroup styleClass="h-panelgroup">
+                                    <h:outputText value="Diagnosis" />
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                        <h:commandLink action="#{claimController.sortByAsc('proc.diagnosis')}"
+                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','asc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                            width="10" height="10" title="sort-ascending"/>
+                                        </h:commandLink>
+                                        <h:commandLink action="#{claimController.sortByDesc('proc.diagnosis')}"
+                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','desc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/down-arrow.png"
+                                                            width="10" height="10" title="sort-descending"/>
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </f:facet>
+                            <h:outputText value="#{proc.diagnosis}" />
+                        </h:column>
 
-                <h:column>
-					<f:facet name="header">
-					    <h:commandLink action="#{claimController.sortBy('procedureDate')}" styleClass="sortable-header">
-					        <h:outputText value="Procedure Date" />
-					        <h:outputText value="#{claimController.sortField eq 'procedureDate' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
-					    </h:commandLink>
-					</f:facet>
-					<h:outputText value="#{proc.procedureDate}">
-						    <f:convertDateTime pattern="yyyy-MM-dd" />
-					</h:outputText>
-                </h:column>
+                        <!-- Procedure Date Column -->
+                        <h:column>
+                            <f:facet name="header">
+                                <h:panelGroup styleClass="h-panelgroup">
+                                    <h:outputText value="Procedure Date" />
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                        <h:commandLink action="#{claimController.sortByAsc('proc.procedureDate')}"
+                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','asc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                            width="10" height="10" title="sort-ascending"/>
+                                        </h:commandLink>
+                                        <h:commandLink action="#{claimController.sortByDesc('proc.procedureDate')}"
+                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','desc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/down-arrow.png"
+                                                            width="10" height="10" title="sort-descending"/>
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </f:facet>
+                            <h:outputText value="#{proc.procedureDate}">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                            </h:outputText>
+                        </h:column>
 
-                <h:column>
-                     <f:facet name="header">
-					    <h:commandLink action="#{claimController.sortBy('doctorName')}" styleClass="sortable-header">
-					        <h:outputText value="Doctor Name" />
-					        <h:outputText value="#{claimController.sortField eq 'doctorName' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
-					    </h:commandLink>
-					</f:facet>
+                        <!-- Doctor Name Column -->
+                        <h:column>
+                            <f:facet name="header">
+                                <h:panelGroup styleClass="h-panelgroup">
+                                    <h:outputText value="Doctor Name" />
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                        <h:commandLink action="#{claimController.sortByAsc('proc.doctor.doctorName')}"
+                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','asc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                            width="10" height="10" title="sort-ascending"/>
+                                        </h:commandLink>
+                                        <h:commandLink action="#{claimController.sortByDesc('proc.doctor.doctorName')}"
+                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','desc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/down-arrow.png"
+                                                            width="10" height="10" title="sort-descending"/>
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </f:facet>
+                            <h:outputText value="#{proc.doctor.doctorName}" />
+                        </h:column>
 
-    				<h:outputText value="#{proc.doctor.doctorName}" />
-                </h:column>
+                        <!-- Hospital Name Column -->
+                        <h:column>
+                            <f:facet name="header">
+                                <h:panelGroup styleClass="h-panelgroup">
+                                    <h:outputText value="Hospital Name" />
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                        <h:commandLink action="#{claimController.sortByAsc('proc.provider.hospitalName')}"
+                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','asc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                            width="10" height="10" title="sort-ascending"/>
+                                        </h:commandLink>
+                                        <h:commandLink action="#{claimController.sortByDesc('proc.provider.hospitalName')}"
+                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','desc')}"
+                                                       styleClass="sort-icons">
+                                            <h:graphicImage value="/resources/media/images/down-arrow.png"
+                                                            width="10" height="10" title="sort-descending"/>
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </f:facet>
+                            <h:outputText value="#{proc.provider.hospitalName}" />
+                        </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-					    <h:commandLink action="#{claimController.sortBy('hospitalName')}" styleClass="sortable-header">
-					        <h:outputText value="Hospital Name" />
-					        <h:outputText value="#{claimController.sortField eq 'hospitalName' ? (claimController.ascending ? ' ▲' : ' ▼') : ''}" />
-					    </h:commandLink>
-					</f:facet>
-
-                    <h:outputText value="#{proc.provider.hospitalName}" />
-                </h:column>
-
-                <h:column>
-                    <f:facet name="header"><h:outputText value="Action" /></f:facet>
-                    <h:commandButton value="View Details"
-                                     action="#{claimController.searchRecipient(proc)}"
-                                     styleClass="view-btn">
-                        <f:param name="recipientId" value="#{proc.recipient.hId}" />
-                    </h:commandButton>
-                </h:column>
-            </h:dataTable>
-        
+                        <!-- Action Column -->
+                        <h:column>
+                            <f:facet name="header"><h:outputText value="Action" /></f:facet>
+                            <h:commandButton value="View Details"
+                                             action="#{claimController.searchRecipient(proc)}"
+                                             styleClass="view-btn">
+                                <f:param name="recipientId" value="#{proc.recipient.hId}" />
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                </div>
 		    <div class="simple-pagination">
 		        <h:commandButton value="Previous"
 		                         action="#{claimController.previousPage}"
@@ -111,7 +181,9 @@
 		                         disabled="#{!claimController.hasNextPage}"
 		                         styleClass="nav-btn" />
 		    </div>
+		    </h:panelGroup>
         </h:form>
+        
 
 
         <!-- No Data Message -->

@@ -45,7 +45,7 @@ public class ClaimController {
 	private List<PendingOrDeniedClaimDTO> paginatedPendingOrDeclinedClaim;
 	private int page = 0;
 	private int pageSize = 5;
-	private String sortField = "procedureId"; // default sort field
+	private String sortField = "procedureId";
 	private boolean ascending = true;
 	private String searchProcedureId;
 	private String searchClaimId;
@@ -181,15 +181,25 @@ public class ClaimController {
 	}
 
 	
-	public void sortBy(String field) {
-	    if (field.equals(this.sortField)) {
-	        this.ascending = !this.ascending; // toggle sort direction
-	    } else {
-	        this.sortField = field;
-	        this.ascending = true; // default to ascending
-	    }
-	    page = 0; // reset to first page
+	public void sortByAsc(String field) {
+	    this.sortField = field;
+	    this.ascending = true;
+	    this.page = 0;
 	}
+
+	public void sortByDesc(String field) {
+	    this.sortField = field;
+	    this.ascending = false;
+	    this.page = 0;
+	}
+	
+	public boolean renderSortButton(String field, String direction) {
+	    if (!field.equals(this.sortField)) {
+	        return true; // show both buttons if not currently sorted by this field
+	    }
+	    return ("asc".equals(direction) && !ascending) || ("desc".equals(direction) && ascending);
+	}
+
 
 	//Searching unclaimed procedures
 	
@@ -552,15 +562,25 @@ public class ClaimController {
 	    this.ascending1 = ascending1;
 	}
 
-	public void sortByPendingClaim(String field) {
-	    if (field.equals(this.sortField1)) {
-	        this.ascending1 = !this.ascending1;
-	    } else {
-	        this.sortField1 = field;
-	        this.ascending1 = true;
-	    }
-	    page = 0;
+	public void sortByAscPending(String sortField1) {
+	    this.sortField1 = sortField1;
+	    this.ascending1 = true;
+	    this.page = 0;
 	}
+
+	public void sortByDescPending(String sortField1) {
+	    this.sortField1 = sortField1;
+	    this.ascending1 = false;
+	    this.page = 0;
+	}
+	
+	public boolean renderSortButtonPending(String sortField1, String direction) {
+	    if (!sortField1.equals(this.sortField1)) {
+	        return true; // show both buttons if not currently sorted by this field
+	    }
+	    return ("asc".equals(direction) && !ascending1) || ("desc".equals(direction) && ascending1);
+	}
+
 	
 	public String searchClaims() {
 	    // You don't need to do anything here if filtering is handled in the getter

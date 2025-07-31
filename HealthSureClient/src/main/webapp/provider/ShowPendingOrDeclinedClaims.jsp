@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Pending & Declined Claims</title>
-     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingClaims.css" />
+     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingClaim.css" />
     
 </head>
 <f:view>
@@ -21,7 +21,7 @@
             <h2 class="page-title">Pending & Declined Claims</h2>
             <h:form>
 			    <div class="search-card">
-			        <h3 class="search-title">🔍 Filter Claims</h3>
+			        <h3 class="search-title"> Filter Claims</h3>
 			
 			        <div class="search-fields">
 			            <div class="search-field">
@@ -54,79 +54,160 @@
 			</h:form>
    
 
-		    <h:panelGroup rendered="#{not empty claimController.paginatedPendingOrDeclinedClaim}">
             <h:form>
+		    <h:panelGroup rendered="#{not empty claimController.paginatedPendingOrDeclinedClaim}">
+		    	<div class="table-container">
                 <h:dataTable value="#{claimController.paginatedPendingOrDeclinedClaim}" var="claim"
                              styleClass="data-table">
-                    <h:column>
-                        <f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('claimId')}">
-						        <h:outputText value="Claim ID" />
-						        <h:outputText value="#{claimController.sortField1 eq 'claimId' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-
-                        <h:outputText value="#{claim.claimId}" />
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('procedureId')}">
-						        <h:outputText value="Procedure ID" />
-						        <h:outputText value="#{claimController.sortField1 eq 'procedureId' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-
-                        <h:outputText value="#{claim.procedureId}" />
-                    </h:column>
-                    <h:column>
-						<f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('amountClaimed')}" >
-						        <h:outputText value="₹ Claimed" />
-						        <h:outputText value="#{claimController.sortField1 eq 'amountClaimed' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-                        <h:outputText value="#{claim.amountClaimed}" />
-                    </h:column>
-                    <h:column>
-						<f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('amountApproved')}" >
-						        <h:outputText value="₹ Approved" />
-						        <h:outputText value="#{claimController.sortField1 eq 'amountApproved' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-                        <h:outputText value="#{claim.amountApproved}" />
-                    </h:column>
-                    <h:column>
-						<f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('claimStatus')}">
-						        <h:outputText value="Status" />
-						        <h:outputText value="#{claimController.sortField1 eq 'claimStatus' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-                        <h:outputText value="#{claim.claimStatus}" />
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header"><h:outputText value="Remarks" /></f:facet>
-                        <h:outputText value="#{claim.description}" />
-                    </h:column>
-                    <h:column>
-						<f:facet name="header">
-						    <h:commandLink action="#{claimController.sortByPendingClaim('actionDate')}">
-						        <h:outputText value="Action Date" />
-						        <h:outputText value="#{claimController.sortField1 eq 'actionDate' ? (claimController.ascending1 ? ' ▲' : ' ▼') : ''}" />
-						    </h:commandLink>
-						</f:facet>
-                        <h:outputText value="#{claim.actionDate}">
-						    <f:convertDateTime pattern="yyyy-MM-dd" />
-						</h:outputText>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header"><h:outputText value="Action" /></f:facet>
-                        <h:commandButton value="Update Claim"
-                                         action="#{claimController.editClaim(claim.claimId)}"
-                                         styleClass="update-btn" />
-                    </h:column>
+				    <!-- Claim ID -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="Claim ID" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('claimId')}"
+				                                   rendered="#{claimController.renderSortButtonPending('claimId','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('claimId')}"
+				                                   rendered="#{claimController.renderSortButtonPending('claimId','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.claimId}" />
+				    </h:column>
+				
+				    <!-- Procedure ID -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="Procedure ID" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('procedureId')}"
+				                                   rendered="#{claimController.renderSortButtonPending('procedureId','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('procedureId')}"
+				                                   rendered="#{claimController.renderSortButtonPending('procedureId','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.procedureId}" />
+				    </h:column>
+				
+				    <!-- ₹ Claimed -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="₹ Claimed" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('amountClaimed')}"
+				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('amountClaimed')}"
+				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.amountClaimed}" />
+				    </h:column>
+				
+				    <!-- ₹ Approved -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="₹ Approved" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('amountApproved')}"
+				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('amountApproved')}"
+				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.amountApproved}" />
+				    </h:column>
+				
+				    <!-- Status -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="Status" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('claimStatus')}"
+				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('claimStatus')}"
+				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.claimStatus}" />
+				    </h:column>
+				
+				    <!-- Remarks -->
+				    <h:column>
+				        <f:facet name="header"><h:outputText value="Remarks" /></f:facet>
+				        <h:outputText value="#{claim.description}" />
+				    </h:column>
+				
+				    <!-- Action Date -->
+				    <h:column>
+				        <f:facet name="header">
+				            <h:panelGroup styleClass="h-panelgroup">
+				                <h:outputText value="Action Date" />
+				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                    <h:commandLink action="#{claimController.sortByAscPending('actionDate')}"
+				                                   rendered="#{claimController.renderSortButtonPending('actionDate','asc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
+				                    </h:commandLink>
+				                    <h:commandLink action="#{claimController.sortByDescPending('actionDate')}"
+				                                   rendered="#{claimController.renderSortButtonPending('actionDate','desc')}"
+				                                   styleClass="sort-icons">
+				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
+				                    </h:commandLink>
+				                </h:panelGroup>
+				            </h:panelGroup>
+				        </f:facet>
+				        <h:outputText value="#{claim.actionDate}">
+				            <f:convertDateTime pattern="yyyy-MM-dd" />
+				        </h:outputText>
+				    </h:column>
+				
+				    <!-- Action -->
+				    <h:column>
+				        <f:facet name="header"><h:outputText value="Action" /></f:facet>
+				        <h:commandButton value="Update Claim"
+				                         action="#{claimController.editClaim(claim.claimId)}"
+				                         styleClass="update-btn" />
+				    </h:column>
                 </h:dataTable>
+                </div>
                 
                 <div class="simple-pagination">
 		        <h:commandButton value="Previous"
@@ -142,9 +223,9 @@
 		                         disabled="#{!claimController.hasNextPage1}"
 		                         styleClass="nav-btn" />
 		    </div>
+    </h:panelGroup>
             </h:form>
         </div>
-    </h:panelGroup>
 
     <!-- No Data Message -->
     <h:panelGroup rendered="#{empty claimController.paginatedPendingOrDeclinedClaim}">
