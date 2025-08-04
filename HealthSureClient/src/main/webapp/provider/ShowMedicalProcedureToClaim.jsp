@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <title>Available Procedures for Claim</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedures.css" />
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowMedicalProcedure.css" />
 </head>
 <body>
 <f:view>
@@ -18,14 +18,23 @@
         <h1 class="page-title">Unclaimed Medical Procedures</h1>
 
         <!-- 🔍 Search Section -->
-        <h:form>
-            <div class="search-container">
-                <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />
-                <h:inputText id="searchProcId" value="#{claimController.searchProcedureId}" styleClass="search-input" />
-                <h:commandButton value="Search" action="#{claimController.searchByProcedureId}" styleClass="search-btn"/>
-                <h:commandButton value="Clear" action="#{claimController.clearSearch}" styleClass="clear-btn"/>
-            </div>
-        </h:form>
+        <h:form id="searchForm">
+		    <div class="search-container">
+		    	<h:messages globalOnly="true" styleClass="error-message" />
+		        <div class="search-field">
+		            <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />
+		            <h:inputText id="searchProcId" value="#{claimController.searchProcedureId}" styleClass="search-input" />
+		            <div class="message-container">
+		                <h:message for="searchProcId" styleClass="error-message" />
+		            </div>
+		        </div>
+		
+		        <div class="search-actions">
+		            <h:commandButton value="Search" action="#{claimController.searchByProcedureId}" styleClass="search-btn"/>
+		            <h:commandButton value="Reset" action="#{claimController.clearSearch}" styleClass="clear-btn"/>
+		        </div>
+		    </div>
+		</h:form>
 
         <!-- 📊 Data Table -->
         <h:form>
@@ -40,18 +49,19 @@
                                 <h:panelGroup styleClass="h-panelgroup">
                                     <h:outputText value="Procedure Id" />
                                     <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                    <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByAsc('proc.procedureId')}"
-                                                       rendered="#{claimController.renderSortButton('proc.procedureId','asc')}"
-                                                       styleClass="sort-icons">
-                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
+                                                       rendered="#{claimController.renderSortButton('proc.procedureId','asc')}">                                            <h:graphicImage value="/resources/media/images/up-arrow.png"
                                                             width="10" height="10" title="sort-ascending"/>
                                         </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByDesc('proc.procedureId')}"
-                                                       rendered="#{claimController.renderSortButton('proc.procedureId','desc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.procedureId','desc')}">
                                             <h:graphicImage value="/resources/media/images/down-arrow.png"
                                                             width="10" height="10" title="sort-descending"/>
                                         </h:commandLink>
+                                    </h:panelGroup>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </f:facet>
@@ -64,18 +74,21 @@
                                 <h:panelGroup styleClass="h-panelgroup">
                                     <h:outputText value="Diagnosis" />
                                     <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                    	<h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByAsc('proc.diagnosis')}"
-                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','asc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','asc')}">
                                             <h:graphicImage value="/resources/media/images/up-arrow.png"
                                                             width="10" height="10" title="sort-ascending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
+                                        
+                                        <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByDesc('proc.diagnosis')}"
-                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','desc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.diagnosis','desc')}">
                                             <h:graphicImage value="/resources/media/images/down-arrow.png"
                                                             width="10" height="10" title="sort-descending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </f:facet>
@@ -88,18 +101,21 @@
                                 <h:panelGroup styleClass="h-panelgroup">
                                     <h:outputText value="Procedure Date" />
                                     <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                    	<h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByAsc('proc.procedureDate')}"
-                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','asc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','asc')}">
                                             <h:graphicImage value="/resources/media/images/up-arrow.png"
                                                             width="10" height="10" title="sort-ascending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
+                                        
+                                        <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByDesc('proc.procedureDate')}"
-                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','desc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.procedureDate','desc')}">
                                             <h:graphicImage value="/resources/media/images/down-arrow.png"
                                                             width="10" height="10" title="sort-descending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </f:facet>
@@ -114,18 +130,21 @@
                                 <h:panelGroup styleClass="h-panelgroup">
                                     <h:outputText value="Doctor Name" />
                                     <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                    	<h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByAsc('proc.doctor.doctorName')}"
-                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','asc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','asc')}">
                                             <h:graphicImage value="/resources/media/images/up-arrow.png"
                                                             width="10" height="10" title="sort-ascending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
+                                        
+                                        <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByDesc('proc.doctor.doctorName')}"
-                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','desc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.doctor.doctorName','desc')}">
                                             <h:graphicImage value="/resources/media/images/down-arrow.png"
                                                             width="10" height="10" title="sort-descending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </f:facet>
@@ -137,19 +156,22 @@
                             <f:facet name="header">
                                 <h:panelGroup styleClass="h-panelgroup">
                                     <h:outputText value="Hospital Name" />
-                                    <h:panelGroup layout="block" styleClass="sort-icons-container">
+                                    <h:panelGroup layout="block" styleClass="sort-icons-container">	
+                                    	<h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByAsc('proc.provider.hospitalName')}"
-                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','asc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','asc')}">
                                             <h:graphicImage value="/resources/media/images/up-arrow.png"
                                                             width="10" height="10" title="sort-ascending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
+                                        
+                                        <h:panelGroup styleClass="sort-icons">
                                         <h:commandLink action="#{claimController.sortByDesc('proc.provider.hospitalName')}"
-                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','desc')}"
-                                                       styleClass="sort-icons">
+                                                       rendered="#{claimController.renderSortButton('proc.provider.hospitalName','desc')}">
                                             <h:graphicImage value="/resources/media/images/down-arrow.png"
                                                             width="10" height="10" title="sort-descending"/>
                                         </h:commandLink>
+                                        </h:panelGroup>
                                     </h:panelGroup>
                                 </h:panelGroup>
                             </f:facet>

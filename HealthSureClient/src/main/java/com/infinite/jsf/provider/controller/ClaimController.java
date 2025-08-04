@@ -50,8 +50,6 @@ public class ClaimController {
 	private String searchProcedureId;
 	private String searchClaimId;
 	private String searchClaimStatus;
-	private Date searchActionDateFrom;
-	private Date searchActionDateTo;
 
 
 	
@@ -76,22 +74,6 @@ public class ClaimController {
 
 	public void setSearchClaimStatus(String searchClaimStatus) {
 		this.searchClaimStatus = searchClaimStatus;
-	}
-
-	public Date getSearchActionDateFrom() {
-		return searchActionDateFrom;
-	}
-
-	public void setSearchActionDateFrom(Date searchActionDateFrom) {
-		this.searchActionDateFrom = searchActionDateFrom;
-	}
-
-	public Date getSearchActionDateTo() {
-		return searchActionDateTo;
-	}
-
-	public void setSearchActionDateTo(Date searchActionDateTo) {
-		this.searchActionDateTo = searchActionDateTo;
 	}
 
 	public void setSearchProcedureId(String searchProcedureId) {
@@ -219,9 +201,17 @@ public class ClaimController {
 	}
 	
 	public String searchByProcedureId() {
-	    // You don't need to do anything here if filtering is handled in the getter
-		System.err.println("search method is called.");
-	    return null; // Stay on the same page
+		this.searchProcedureId = searchProcedureId.toUpperCase();
+	    if (searchProcedureId == null || !searchProcedureId.matches("^PROC\\d{3}$")) {
+	        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Invalid Procedure ID", "Must start with 'PROC' followed by 3 digits.");
+	        FacesContext.getCurrentInstance().addMessage("searchForm:searchProcId", message);
+		    this.searchProcedureId = null;
+	        return null; // Stay on the same page
+	    }
+
+	    // Proceed with search logic
+	    return null;
 	}
 
 	
@@ -543,6 +533,8 @@ public class ClaimController {
 	}
 	
 	//=========================Pagination of searchUnclaimedProcedure ===========================
+	
+	
 	private String sortField1 = "claimId"; // default sort field
 	private boolean ascending1 = true;
 	
@@ -583,10 +575,41 @@ public class ClaimController {
 
 	
 	public String searchClaims() {
-	    // You don't need to do anything here if filtering is handled in the getter
-		System.err.println("search by claims method is called.");
-	    return null; // Stay on the same page
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    boolean hasInput = false;
+
+	    // Validate Claim ID if provided
+	    if (searchClaimId != null && !searchClaimId.trim().isEmpty()) {
+	        searchClaimId = searchClaimId.trim().toUpperCase();
+	        hasInput = true;
+	        if (!searchClaimId.matches("^CLAIM\\d{3}$")) {
+	            context.addMessage("searchForm:claimId", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Invalid Claim ID", "Must start with 'CLAIM' followed by 3 digits."));
+	            return null;
+	        }
+	    }
+
+	    // Validate Procedure ID if provided
+	    if (searchProcedureId != null && !searchProcedureId.trim().isEmpty()) {
+	        searchProcedureId = searchProcedureId.trim().toUpperCase();
+	        hasInput = true;
+	        if (!searchProcedureId.matches("^PROC\\d{3}$")) {
+	            context.addMessage("searchForm:procedureId", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Invalid Procedure ID", "Must start with 'PROC' followed by 3 digits."));
+	            return null;
+	        }
+	    }
+	    // If no input provided, show error
+	    if (!hasInput) {
+	        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please enter at least one search field.", "Please enter at least one search field."));
+	        return null;
+	    }
+
+	    // Proceed with search logic
+	    return null; // Or null if staying on same page
 	}
+
 	
 	public String clearSearchClaims() {
 	    searchClaimId = null;

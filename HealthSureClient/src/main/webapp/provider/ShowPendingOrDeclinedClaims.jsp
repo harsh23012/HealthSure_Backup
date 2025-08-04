@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Pending & Declined Claims</title>
-     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingClaim.css" />
+     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ShowPendingClaims.css" />
     
 </head>
 <f:view>
@@ -19,36 +19,44 @@
     <!-- Claims Panel -->
         <div class="page-wrapper">
             <h2 class="page-title">Pending & Declined Claims</h2>
-            <h:form>
+            <h:form id="searchForm">
 			    <div class="search-card">
 			        <h3 class="search-title"> Filter Claims</h3>
-			
 			        <div class="search-fields">
 			            <div class="search-field">
 			                <label for="claimId">Claim ID</label>
-			                <h:inputText id="claimId" value="#{claimController.searchClaimId}" />
+			                <h:inputText id="claimId" value="#{claimController.searchClaimId}" styleClass="search-input"/>
+			                <div class="message-container">
+			                    <h:message for="claimId" styleClass="error-message" />
+			                    <h:messages globalOnly="true" layout="table" styleClass="error-message" />
+			                </div>
 			            </div>
 			
 			            <div class="search-field">
 			                <label for="procedureId">Procedure ID</label>
-			                <h:inputText id="procedureId" value="#{claimController.searchProcedureId}" />
+			                <h:inputText id="procedureId" value="#{claimController.searchProcedureId}" styleClass="search-input"/>
+							<div class="message-container">
+							<h:message for="procedureId" styleClass="error-message" />
+							</div>
 			            </div>
 			
 			            <div class="search-field">
 			                <label for="claimStatus">Claim Status</label>
-			                <h:selectOneMenu id="claimStatus" value="#{claimController.searchClaimStatus}">
+			                <h:selectOneMenu id="claimStatus" value="#{claimController.searchClaimStatus}" styleClass="search-input">
 			                    <f:selectItem itemLabel="-- Select --" itemValue="" />
 			                    <f:selectItem itemLabel="Pending" itemValue="Pending" />
 			                    <f:selectItem itemLabel="Declined" itemValue="Declined" />
 			                </h:selectOneMenu>
 			            </div>
-			
+			            
+						
+
 
 			        </div>
 			
 			        <div class="search-actions">
 			            <h:commandButton value="Search" action="#{claimController.searchClaims}" styleClass="search-btn" />
-			            <h:commandButton value="Clear" action="#{claimController.clearSearchClaims}" styleClass="clear-btn" />
+			            <h:commandButton value="Reset" action="#{claimController.clearSearchClaims}" styleClass="clear-btn" />
 			        </div>
 			    </div>
 			</h:form>
@@ -65,16 +73,18 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="Claim ID" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('claimId')}"
-				                                   rendered="#{claimController.renderSortButtonPending('claimId','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('claimId','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('claimId')}"
-				                                   rendered="#{claimController.renderSortButtonPending('claimId','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('claimId','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -87,16 +97,19 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="Procedure ID" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('procedureId')}"
-				                                   rendered="#{claimController.renderSortButtonPending('procedureId','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('procedureId','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('procedureId')}"
-				                                   rendered="#{claimController.renderSortButtonPending('procedureId','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('procedureId','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -109,16 +122,19 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="₹ Claimed" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('amountClaimed')}"
-				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('amountClaimed')}"
-				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('amountClaimed','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -131,16 +147,19 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="₹ Approved" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('amountApproved')}"
-				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('amountApproved')}"
-				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('amountApproved','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -153,16 +172,19 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="Status" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('claimStatus')}"
-				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('claimStatus')}"
-				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('claimStatus','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -181,16 +203,19 @@
 				            <h:panelGroup styleClass="h-panelgroup">
 				                <h:outputText value="Action Date" />
 				                <h:panelGroup layout="block" styleClass="sort-icons-container">
+				                	<h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByAscPending('actionDate')}"
-				                                   rendered="#{claimController.renderSortButtonPending('actionDate','asc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('actionDate','asc')}">
 				                        <h:graphicImage value="/resources/media/images/up-arrow.png" width="10" height="10" title="sort-ascending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
+				                    
+				                    <h:panelGroup styleClass="sort-icons">
 				                    <h:commandLink action="#{claimController.sortByDescPending('actionDate')}"
-				                                   rendered="#{claimController.renderSortButtonPending('actionDate','desc')}"
-				                                   styleClass="sort-icons">
+				                                   rendered="#{claimController.renderSortButtonPending('actionDate','desc')}">
 				                        <h:graphicImage value="/resources/media/images/down-arrow.png" width="10" height="10" title="sort-descending"/>
 				                    </h:commandLink>
+				                    </h:panelGroup>
 				                </h:panelGroup>
 				            </h:panelGroup>
 				        </f:facet>
@@ -225,12 +250,12 @@
 		    </div>
     </h:panelGroup>
             </h:form>
-        </div>
-
     <!-- No Data Message -->
     <h:panelGroup rendered="#{empty claimController.paginatedPendingOrDeclinedClaim}">
         <p class="empty-message">No Pending or Denied Claim is available for update.</p>
     </h:panelGroup>
+        </div>
+
 	    <!-- 📎 Footer -->
     <jsp:include page="/footer/Footer.jsp" />
 </body>

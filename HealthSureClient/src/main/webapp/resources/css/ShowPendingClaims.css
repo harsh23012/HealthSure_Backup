@@ -22,7 +22,7 @@ body {
 .page-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #1d4ed8;
+    color: #286295;
     text-align: center;
 }
 
@@ -34,6 +34,26 @@ body {
     border-radius: 10px;
     padding: 25px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.message-container {
+    margin-top: 4px;
+    min-height: 18px; /* Reserve space even if no error */
+}
+
+.error-message {
+    color: red;
+    font-size: 0.85em;
+    margin-bottom: 8px;
+    display: block;
 }
 
 /* Title */
@@ -91,7 +111,7 @@ body {
 }
 
 .search-btn {
-    background-color: #0078d4;
+    background-color: #2862AA;
     color: white;
 }
 
@@ -101,13 +121,59 @@ body {
 }
 
 .search-btn:hover {
-    background-color: #005fa3;
+    background-color: #005EE1;
 }
 
 .clear-btn:hover {
     background-color: #5a6268;
 }
 
+/* --- Sorting Arrows in Table Header --- */
+.h-panelgroup {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap; /* Allows header content to wrap if necessary */
+	gap: 2px; /* Minimal gap */
+	line-height: 1.1; /* Tighter line height for wrapped header text */
+}
+ 
+.sort-icons-container {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    height: 16px; /* Reserve enough space for both buttons */
+    justify-content: flex-start;
+    position: relative;
+}
+
+.sort-icons {
+    display: block;
+    padding: 0;
+    text-decoration: none;
+    line-height: 0;
+    height:7px; /* Fixed height for each icon */
+    overflow: hidden;
+}
+
+.sort-icons img {
+    vertical-align: middle;
+    filter: brightness(0.8);
+    width: 7px;
+    height: 7px;
+}
+
+.sort-icons:hover img {
+    filter: brightness(1);
+}
+.table-container {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+ 
 
 .data-table {
     width: 100%;
@@ -118,7 +184,7 @@ body {
 
 .data-table th {
     background-color: #eff6ff;
-    color: #1d4ed8;
+    color: #286295;
     font-weight: 600;
     text-transform: uppercase;
     text-align: left;
@@ -136,7 +202,7 @@ body {
 }
 
 .update-btn {
-    background-color: #2563eb;
+    background-color: #2862AA;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
@@ -146,7 +212,7 @@ body {
 }
 
 .update-btn:hover {
-    background-color: #1e40af;
+    background-color: #005EE1;
 }
 
 .empty-message {
@@ -161,7 +227,7 @@ body {
 
 .simple-pagination {
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     gap: 1.5rem;
     margin-top: 1rem;
@@ -177,7 +243,7 @@ body {
     font-size: 0.875rem;
     font-weight: bold;
     color: white;
-    background-color: #1d4ed8;
+    background-color: #6c757d;
     border: none;
     border-radius: 0.375rem;
     cursor: pointer;
@@ -185,8 +251,7 @@ body {
 }
 
 .nav-btn:hover:not(:disabled) {
-    background-color: #2563eb;
-    transform: translateY(-1px);
+    background-color: #5a6268;
 }
 
 .nav-btn:disabled {
