@@ -1,7 +1,6 @@
 package com.infinite.jsf.provider.controller;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,16 +49,30 @@ public class ClaimController {
 	private String searchProcedureId;
 	private String searchClaimId;
 	private String searchClaimStatus;
+	private String selectedSubscription;
 
 
 	
 	//============Getter & Setter================//
 	
 	
+	
 	public String getSearchProcedureId() {
 		return searchProcedureId;
 	}
 	
+	public String getSelectedSubscription() {
+		return selectedSubscription;
+	}
+
+	public void setSelectedSubscription(String selectedSubscription) {
+		this.selectedSubscription = selectedSubscription;
+	}
+
+	public void setPaginatedPendingOrDeclinedClaim(List<PendingOrDeniedClaimDTO> paginatedPendingOrDeclinedClaim) {
+		this.paginatedPendingOrDeclinedClaim = paginatedPendingOrDeclinedClaim;
+	}
+
 	public String getSearchClaimId() {
 		return searchClaimId;
 	}
@@ -738,13 +751,22 @@ public class ClaimController {
         httpSession.setAttribute("prescription", claim.getProcedure().getPrescriptions());
         httpSession.setAttribute("selectedSubscribe", claim.getCoverage());
         httpSession.setAttribute("claimId", claimId);
-        
-        
-//        httpSession.setAttribute("medicines", claim.getProcedure);
         httpSession.setAttribute("tests", claim.getProcedure().getTests());
-        log.info("All details are fetched for update claim.");
+		this.recepientId = claim.getRecipient().gethId();
+		this.subscriptions = claimDao.getActiveSubscriptionsByRecipient(recepientId);
+        
+		if(subscriptions != null && !subscriptions.isEmpty()) {
+			System.out.println("Subscriptions found: " + subscriptions.size());
+		httpSession.setAttribute("subscriptions", subscriptions);
+		log.info("All details are fetched for update claim.");
 		 return "UpdateClaim.jsp?faces-redirect=true";
-		
+		}
+		else {
+			log.error("No active insurance found of recipient with id : " + recepientId + ".");
+			message = "No active insurance plans found for this recipient.";
+			return null;
+		}
+        	
 	}
 	
 	public String updateClaim() {
@@ -753,8 +775,16 @@ public class ClaimController {
 				.getExternalContext().getSession(true);	
 		FacesContext context = FacesContext.getCurrentInstance();
 		 Recipient recipient = (Recipient) httpSession.getAttribute("recipient");
+		 @SuppressWarnings("unchecked")
+		 List<Subscribe> subscription = (List<Subscribe>) httpSession.getAttribute("subscriptions");
 		    MedicalProcedure procedure = (MedicalProcedure) httpSession.getAttribute("procedure");
-		    Subscribe subscribe = (Subscribe) httpSession.getAttribute("selectedSubscribe");
+		    Subscribe newSubscribe = null;
+		    for (Subscribe sub : subscription) {
+		        if (sub.getSubscribeId().equals(selectedSubscription)) {
+		        	newSubscribe = sub;
+		            break;
+		        }
+		    }
 		    Provider provider = new Provider();
 		    provider.setProviderId("PROV001");
 		String claimId = (String) httpSession.getAttribute("claimId");
@@ -767,9 +797,9 @@ public class ClaimController {
         history.setDescription("Claim updated by provider.");
         history.setActionDate(new java.util.Date());
         
-        BigDecimal coverageAmount =BigDecimal.valueOf(subscribe.getRemainingCoverageAmount());
+        BigDecimal coverageAmount =BigDecimal.valueOf(newSubscribe.getRemainingCoverageAmount());
 	    // Validate required data
-	    if (recipient == null || procedure == null || subscribe == null || provider == null) {
+	    if (recipient == null || procedure == null || newSubscribe == null || provider == null) {
 	        message = "Missing data for claim submission. Please ensure all steps are completed.";
 	        return null;
 	    }
@@ -793,8 +823,9 @@ public class ClaimController {
 	    	return null;
 	    }
 
+	    claim.setAmountClaimed(amount);
 	    
-		Claims updatedClaim = claimDao.updateClaim(claimId, history, amount);
+		Claims updatedClaim = claimDao.updateClaim(claimId, history, amount, newSubscribe);
 		if(updatedClaim != null) {
 			httpSession.setAttribute("updatedClaim", updatedClaim);
 			httpSession.setAttribute("history", history);

@@ -305,7 +305,7 @@ public class ClaimDaoImpl implements ClaimDao {
     }
 
 	@Override
-	public Claims updateClaim(String claimId, ClaimHistory history, BigDecimal updatedAmountClaimed) {
+	public Claims updateClaim(String claimId, ClaimHistory history, BigDecimal updatedAmountClaimed, Subscribe newSubscribe) {
 		Session session = sessionFactory.openSession();
 		Transaction trans = session.beginTransaction();
 		Claims claim = (Claims) session.get(Claims.class, claimId);
@@ -322,14 +322,22 @@ public class ClaimDaoImpl implements ClaimDao {
             if (subscription != null) {
                 double currentAmount = subscription.getRemainingCoverageAmount();
                 double claimAmount = claim.getAmountClaimed().doubleValue();
-                double updatedAmountClaim = updatedAmountClaimed.doubleValue();
-
-                double updatedAmount = currentAmount + claimAmount - updatedAmountClaim;
+                double updatedAmount = currentAmount + claimAmount;
                 subscription.setRemainingCoverageAmount(updatedAmount); // prevent negative values
-                log.info("Remaining coverage amount is roll backed and updated with new claim amount.");
-                session.update(subscription);
+                log.info("Remaining coverage amount is roll backed.");
+                session.merge(subscription);
             }   
             
+            if (newSubscribe != null) {
+            	double currentAmount = newSubscribe.getRemainingCoverageAmount();
+            	double updatedAmountClaim = updatedAmountClaimed.doubleValue();
+            	
+            	double updatedAmount = currentAmount - updatedAmountClaim;
+            	newSubscribe.setRemainingCoverageAmount(updatedAmount);
+            	log.info("Remaining coverage amount updated with new claim amount.");
+            	session.merge(newSubscribe);
+            }
+            claim.setCoverage(newSubscribe);
             claim.setAmountClaimed(updatedAmountClaimed);
             session.update(claim);
             log.info("Claim updated successfully in db.");

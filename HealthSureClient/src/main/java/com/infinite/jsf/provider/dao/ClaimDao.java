@@ -3,9 +3,6 @@ package com.infinite.jsf.provider.dao;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.infinite.jsf.insurance.model.InsuranceCompany;
-import com.infinite.jsf.insurance.model.InsuranceCoverageOption;
-import com.infinite.jsf.insurance.model.InsurancePlan;
 import com.infinite.jsf.insurance.model.Subscribe;
 import com.infinite.jsf.provider.dto.PendingOrDeniedClaimDTO;
 import com.infinite.jsf.provider.model.ClaimHistory;
@@ -31,6 +28,6 @@ public interface ClaimDao {
 	 public Claims fileClaim(Claims claim, ClaimHistory history);
 	 public List<PendingOrDeniedClaimDTO> showPendingClaimsDao();
 	 public Claims findByClaimId(String ClaimId);
-	 public Claims updateClaim(String ClaimId, ClaimHistory history, BigDecimal amountClaimed);
+	 public Claims updateClaim(String ClaimId, ClaimHistory history, BigDecimal amountClaimed, Subscribe newSubscribe);
 	 
 }

@@ -48,8 +48,21 @@
             </div>
 
             <!-- 💵 Claim Section -->
+            <div class="border-bottom">
+			    <h2 class="section-header">Update Insurance Plan</h2>
+			    <label for="planSelect" class="claim-label">
+			        Select New Plan <span style="color: #dc2626;">*</span>
+			    </label>
+			    <h:selectOneMenu id="planSelect" value="#{claimController.selectedSubscription}" styleClass="claim-input">
+			        <f:selectItem itemLabel="-- Select Plan --" itemValue="#{null}" />
+			        <f:selectItems value="#{claimController.subscriptions}" var="sub"
+			                       itemLabel="#{sub.coverage.insurancePlan.planName} - #{sub.coverage.insurancePlan.insuranceCompany.companyName} (₹#{sub.remainingCoverageAmount})"
+			                        itemValue="#{sub.subscribeId}" />
+			    </h:selectOneMenu>
+			    <h:message for="planSelect" style="color:red; font-size:12px;" />
+			</div>
             <div>
-                <h2 class="section-header">Claim Request</h2>
+                <h2 class="section-header">Update Claim Amount</h2>
                 <label for="amountClaimed" class="claim-label">
                     Amount to Claim <span style="color: #dc2626;">*</span>
                 </label>
