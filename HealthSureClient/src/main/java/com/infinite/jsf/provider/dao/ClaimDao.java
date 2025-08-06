@@ -15,7 +15,7 @@ import com.infinite.jsf.recipient.model.Recipient;
 
 public interface ClaimDao {
 	
-	public List<MedicalProcedure> showUnclaimedProcedure();
+	public List<MedicalProcedure> showUnclaimedProcedure(String providerId);
 	public Recipient findByHid(String hId);
 	public Prescription getPrescriptionByProcedureId(MedicalProcedure procedure);
 	public List<PrescribedMedicines> getMedicinesByPrescription(Prescription prescription);
@@ -26,7 +26,7 @@ public interface ClaimDao {
 //	public InsuranceCompany getCompanyByPlan(InsurancePlan plan);
 	 public List<Subscribe> getActiveSubscriptionsByRecipient(String hId);
 	 public Claims fileClaim(Claims claim, ClaimHistory history);
-	 public List<PendingOrDeniedClaimDTO> showPendingClaimsDao();
+	 public List<PendingOrDeniedClaimDTO> showPendingClaimsDao(String ProviderId);
 	 public Claims findByClaimId(String ClaimId);
 	 public Claims updateClaim(String ClaimId, ClaimHistory history, BigDecimal amountClaimed, Subscribe newSubscribe);
 	 

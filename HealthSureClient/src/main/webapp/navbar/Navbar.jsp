@@ -30,7 +30,7 @@
                 <button class="dropdown-button login-btn">Login ▾</button>
                 <ul class="dropdown-menu">
                     <li><a href="adminLogin.jsp">Admin</a></li>
-                    <li><a href="providerLogin.jsp">Provider</a></li>
+                    <li><a href="/HealthSureClient/provider/Login.jsf">Provider</a></li>
                     <li><a href="recipientLogin.jsp">Recipient</a></li>
                     <li><a href="/HealthSureClient/pharmacy/Login.jsf">Pharmacy</a></li>
                 </ul>

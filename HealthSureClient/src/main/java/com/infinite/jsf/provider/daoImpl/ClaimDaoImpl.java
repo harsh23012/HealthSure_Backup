@@ -226,7 +226,7 @@ public class ClaimDaoImpl implements ClaimDao {
 
 
 	@Override
-	public List<MedicalProcedure> showUnclaimedProcedure() {
+	public List<MedicalProcedure> showUnclaimedProcedure(String providerId) {
 	    Session session = sessionFactory.openSession();
 	    
 	    // Fetch procedures that do NOT have a matching entry in the Claims table
@@ -237,14 +237,16 @@ public class ClaimDaoImpl implements ClaimDao {
 	    		        "JOIN FETCH mp.doctor " +
 	    		        "JOIN FETCH mp.recipient " +
 	    		        "WHERE mp.procedureId NOT IN (SELECT c.procedure.procedureId FROM Claims c)"
-	    ).list();
+	    		        + "AND mp.provider.providerId = :providerId"
+	    ).setParameter("providerId", providerId)
+	    .list();
 //	    System.out.println("List size : " + list.size());
 	    session.close();
 	    log.info("Unclaimed procedure is fetched from db in dao.");
 	    return list;
 	}
 
-	public List<PendingOrDeniedClaimDTO> showPendingClaimsDao() {
+	public List<PendingOrDeniedClaimDTO> showPendingClaimsDao(String providerId) {
 		Session session = sessionFactory.openSession();
 
 	    @SuppressWarnings("unchecked")
@@ -256,7 +258,9 @@ public class ClaimDaoImpl implements ClaimDao {
 	        "WHERE c.claimStatus IN ('PENDING', 'DENIED') " +
 	        "AND h.actionDate = " +
 	        "(SELECT MAX(h2.actionDate) FROM ClaimHistory h2 WHERE h2.claim.claimId = c.claimId)"
-	    ).list();
+	        + "AND c.provider.providerId = :providerId"
+	    ).setParameter("providerId", providerId)
+	    .list();
 
 	    List<PendingOrDeniedClaimDTO> pendingOrDeniedClaims = new ArrayList<>();
 

@@ -199,10 +199,11 @@ public class ClaimController {
 	//Searching unclaimed procedures
 	
 	public String searchUnclaimedProcedure() {
-		unclaimedProcedures = claimDao.showUnclaimedProcedure();
-		System.out.println("list of unclaimed procedure : " + unclaimedProcedures.size());
 		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(true);
+		Provider provider = (Provider) httpSession.getAttribute("loggedInProvider");
+		unclaimedProcedures = claimDao.showUnclaimedProcedure(provider.getProviderId());
+		System.out.println("list of unclaimed procedure : " + unclaimedProcedures.size());
 		 httpSession.setAttribute("unclaimedProcedures", unclaimedProcedures);
 		 log.info("Unclaimed Procedure Fetched.");
 		return "ShowMedicalProcedureToClaim.jsp?faces-redirect=true";
@@ -277,6 +278,7 @@ public class ClaimController {
 	        page = 0;
 	        fromIndex = 0;
 	    }
+	    
 
 	    int toIndex = Math.min(fromIndex + pageSize, filteredList.size());
 	    paginatedUnclaimedProcedures = filteredList.subList(fromIndex, toIndex);
@@ -286,6 +288,7 @@ public class ClaimController {
 
 	
 	//=========================Pagination of searchUnclaimedProcedure ===========================
+	
 	
 	
  
@@ -430,9 +433,7 @@ public class ClaimController {
 	    Recipient recipient = (Recipient) httpSession.getAttribute("recipient");
 	    MedicalProcedure procedure = (MedicalProcedure) httpSession.getAttribute("procedure");
 	    Subscribe subscribe = (Subscribe) httpSession.getAttribute("selectedSubscribe");
-//	    Provider provider = (Provider) httpSession.getAttribute("provider");
-	    Provider provider = new Provider();
-	    provider.setProviderId("PROV001");
+	    Provider provider = (Provider) httpSession.getAttribute("loggedInProvider");
 	    System.out.println("Provider is set");
 	    System.out.println("Amount claimed : " + amountClaimed);
 	    BigDecimal coverageAmount =BigDecimal.valueOf(subscribe.getRemainingCoverageAmount());
@@ -527,9 +528,10 @@ public class ClaimController {
 	
 	
 	public String showPendingClaims() {
-		pendingOrDeclinedClaim = claimDao.showPendingClaimsDao();
 		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(true);
+		Provider provider = (Provider) httpSession.getAttribute("loggedInProvider");
+		pendingOrDeclinedClaim = claimDao.showPendingClaimsDao(provider.getProviderId());
 		System.out.println("size : " + pendingOrDeclinedClaim.size());
 		if(pendingOrDeclinedClaim != null && !pendingOrDeclinedClaim.isEmpty()) {
 			

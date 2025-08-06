@@ -29,8 +29,8 @@
                     <div><strong>Health ID:</strong> <h:outputText value="#{sessionScope.recipient.hId}" /></div>
                     <div><strong>Procedure:</strong> <h:outputText value="#{sessionScope.procedure.diagnosis}" /></div>
                     <div><strong>Procedure Date:</strong> <h:outputText value="#{sessionScope.procedure.procedureDate}" /></div>
-                    <div><strong>Provider:</strong> <h:outputText value="#{sessionScope.provider.name}" /></div>
-                    <div><strong>Provider ID:</strong> <h:outputText value="#{sessionScope.provider.providerId}" /></div>
+                    <div><strong>Provider:</strong> <h:outputText value="#{sessionScope.loggedInProvider.providerName}" /></div>
+                    <div><strong>Provider ID:</strong> <h:outputText value="#{sessionScope.loggedInProvider.providerId}" /></div>
                 </div>
             </div>
 

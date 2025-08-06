@@ -20,6 +20,7 @@
         <!-- 🔍 Search Section -->
         <h:form id="searchForm">
 		    <div class="search-container">
+		    	<h3 class="search-title"> Filter Procedure</h3>
 		    	<h:messages globalOnly="true" styleClass="error-message" />
 		        <div class="search-field">
 		            <h:outputLabel for="searchProcId" value="Search by Procedure ID:" styleClass="search-label" />

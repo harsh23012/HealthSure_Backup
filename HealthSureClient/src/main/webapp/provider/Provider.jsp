@@ -18,7 +18,7 @@
     <!-- 👋 Welcome Message -->
     <div class="container-xl">
         <h2 class="welcome-heading">
-            Welcome, <h:outputText value="#{providerBean.providerName}" /> 👋
+            Welcome, <h:outputText value="#{sessionScope.loggedInProvider.providerName}" /> 👋
         </h2>
         <p class="subtext">Here’s a snapshot of your practice this week.</p>
     </div>

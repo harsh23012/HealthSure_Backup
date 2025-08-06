@@ -235,6 +235,7 @@
                 </div>
                 
                 <div class="simple-pagination">
+                
 		        <h:commandButton value="Previous"
 		                         action="#{claimController.previousPage1}"
 		                         disabled="#{!claimController.hasPreviousPage1}"

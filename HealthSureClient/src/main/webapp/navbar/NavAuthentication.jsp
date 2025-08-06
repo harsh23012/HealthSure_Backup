@@ -15,11 +15,11 @@
 
         <!-- NAV LINKS -->
         <ul class="nav-links">
-            <li><a href="#home" class="nav-link">Home</a></li>
-            <li><a href="#departments" class="nav-link">Departments</a></li>
-            <li><a href="#doctors" class="nav-link">Doctors</a></li>
-            <li><a href="#aboutus" class="nav-link">About Us</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="/HealthSureClient/home/Home.jsf#home" class="nav-link">Home</a></li>
+            <li><a href="/HealthSureClient/home/Home.jsf#departments" class="nav-link">Departments</a></li>
+            <li><a href="/HealthSureClient/home/Home.jsf#doctors" class="nav-link">Doctors</a></li>
+            <li><a href="/HealthSureClient/home/Home.jsf#aboutus" class="nav-link">About Us</a></li>
+            <li><a href="/HealthSureClient/home/Home.jsf#contact" class="nav-link">Contact</a></li>
         </ul>
 
         <!-- LOGIN + SIGNUP -->
@@ -30,7 +30,7 @@
                 <button class="dropdown-button login-btn">Login ▾</button>
                 <ul class="dropdown-menu">
                     <li><a href="adminLogin.jsp">Admin</a></li>
-                    <li><a href="providerLogin.jsp">Provider</a></li>
+                    <li><a href="/HealthSureClient/provider/Login.jsf">Provider</a></li>
                     <li><a href="recipientLogin.jsp">Recipient</a></li>
                     <li><a href="/HealthSureClient/pharmacy/Login.jsf">Pharmacy</a></li>
                 </ul>
