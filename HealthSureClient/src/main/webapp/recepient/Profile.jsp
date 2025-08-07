@@ -5,36 +5,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Recepient Profile</title>
-    <link rel="stylesheet" href="/HealthSureClient/resources/css/profile.css" />
+    <title>Provider Profile</title>
+    <link rel="stylesheet" href="/HealthSureClient/resources/css/profiles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
 <body>
 
 <f:view>
-    <jsp:include page="/navbar/NavRecepient.jsp" />
+    <jsp:include page="/navbar/NavProvider.jsp" />
+
     <div class="container">
-        <h1 class="heading-primary">
-            Welcome, <h:outputText value="#{sessionScope.provider_name}" />
-        </h1>
+        <div class="profile-card">
+            <h1 class="heading-primary">
+                👨‍⚕️ Welcome, <h:outputText value="#{sessionScope.loggedInRecipient.recipientName}" />
+            </h1>
 
-        <div class="details-box">
-            <p><strong>Provider ID:</strong> <h:outputText value="#{sessionScope.provider_id}" /></p>
-            <p><strong>Hospital Name:</strong> <h:outputText value="#{sessionScope.hospital_name}" /></p>
-            <p><strong>Email:</strong> <h:outputText value="#{sessionScope.email}" /></p>
-            <p><strong>Address:</strong> <h:outputText value="#{sessionScope.address}" /></p>
-            <p><strong>City:</strong> <h:outputText value="#{sessionScope.city}" /></p>
-            <p><strong>State:</strong> <h:outputText value="#{sessionScope.state}" /></p>
-            <p><strong>ZIP Code:</strong> <h:outputText value="#{sessionScope.zip_code}" /></p>
-        </div>
+            <div class="details-box">
+                <p><i class="fas fa-id-badge text-blue-600"></i> <strong>Health ID:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.providerId}" /></p>
+                <p><i class="fas fa-hospital-symbol text-blue-600"></i> <strong>Recipient Name:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.recipientName}" /></p>
+                <p><i class="fas fa-envelope text-blue-600"></i> <strong>Email:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.email}" /></p>
+                <p><i class="fas fa-map-marker-alt text-blue-600"></i> <strong>Address:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.address}" /></p>
+                <p><i class="fas fa-city text-blue-600"></i> <strong>City:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.city}" /></p>
+                <p><i class="fas fa-flag text-blue-600"></i> <strong>State:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.state}" /></p>
+                <p><i class="fas fa-mail-bulk text-blue-600"></i> <strong>ZIP Code:</strong> <h:outputText value="#{sessionScope.loggedInRecipient.zipcode}" /></p>
+            </div>
 
-        <div class="button-group">
-            <h:form>
-                <h:commandButton value="Logout" action="#{authBean.logout}" styleClass="button-red" />
-            </h:form>
-            <h:form>
-                <h:commandButton value="Reset Password" action="#{authBean.resetPassword}" styleClass="button-yellow" />
-            </h:form>
+            <div class="button-group">
+                <h:form>
+                    <h:commandButton value="Logout" action="#{authBean.logout}" styleClass="button-red" />
+                </h:form>
+                <h:form>
+                    <h:commandButton value="Reset Password" action="#{authBean.resetPassword}" styleClass="button-yellow" />
+                </h:form>
+                
+            </div>
         </div>
     </div>
 </f:view>

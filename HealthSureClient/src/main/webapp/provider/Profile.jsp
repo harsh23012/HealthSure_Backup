@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <title>Provider Profile</title>
-    <link rel="stylesheet" href="/HealthSureClient/resources/css/profile.css" />
+    <link rel="stylesheet" href="/HealthSureClient/resources/css/profiles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -25,6 +25,7 @@
                 <p><i class="fas fa-id-badge text-blue-600"></i> <strong>Provider ID:</strong> <h:outputText value="#{sessionScope.loggedInProvider.providerId}" /></p>
                 <p><i class="fas fa-hospital-symbol text-blue-600"></i> <strong>Hospital Name:</strong> <h:outputText value="#{sessionScope.loggedInProvider.hospitalName}" /></p>
                 <p><i class="fas fa-envelope text-blue-600"></i> <strong>Email:</strong> <h:outputText value="#{sessionScope.loggedInProvider.email}" /></p>
+                <p><i class="fas fa-phone-alt text-blue-600"></i> <strong>TelePhone:</strong> <h:outputText value="#{sessionScope.loggedInProvider.telephone}" /></p>
                 <p><i class="fas fa-map-marker-alt text-blue-600"></i> <strong>Address:</strong> <h:outputText value="#{sessionScope.loggedInProvider.address}" /></p>
                 <p><i class="fas fa-city text-blue-600"></i> <strong>City:</strong> <h:outputText value="#{sessionScope.loggedInProvider.city}" /></p>
                 <p><i class="fas fa-flag text-blue-600"></i> <strong>State:</strong> <h:outputText value="#{sessionScope.loggedInProvider.state}" /></p>

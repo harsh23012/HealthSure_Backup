@@ -23,7 +23,7 @@
         <div class="footer-links">
             <b>Login As</b>
             <ul>
-                <li><a href="#">Provider</a></li>
+                <li><a href="/HealthSureClient/provider/Login.jsf">Provider</a></li>
                 <li><a href="#">Recipient</a></li>
                 <li><a href="/HealthSureClient/pharmacy/Login.jsf">Pharmacy</a></li>
                 <li><a href="#">Admin</a></li>

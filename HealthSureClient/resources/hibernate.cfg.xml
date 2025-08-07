@@ -54,7 +54,9 @@
 			resource="com/infinite/jsf/provider/mapping/Account.hbm.xml" />
 		<mapping
 			resource="com/infinite/jsf/provider/mapping/Provider.hbm.xml" />
-			
+		<mapping
+			resource="com/infinite/jsf/provider/mapping/ProviderOtp.hbm.xml"/>
+		
 			
 
 		<!-- Recipient Module -->
