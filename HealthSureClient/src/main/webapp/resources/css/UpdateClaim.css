@@ -71,6 +71,7 @@ body {
     color: #dc2626;
     margin-top: 0.25rem;
     font-size: 0.875rem;
+    display: block;
 }
 
 .submit-btn {
@@ -101,6 +102,7 @@ body {
     font-weight: 600;
     margin-top: 1rem;
 }
+
 
 .required-note {
     font-size: 0.75rem;

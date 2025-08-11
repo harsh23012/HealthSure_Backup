@@ -25,4 +25,13 @@
     <url-pattern>*.jsf</url-pattern>
   </servlet-mapping>
   
+  <filter>
+		<filter-name>ProviderFilter</filter-name>
+		<filter-class>com.infinite.jsf.provider.filter.ProviderFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ProviderFilter</filter-name>
+		<url-pattern>/provider/*</url-pattern>
+	</filter-mapping>
+  
 </web-app>

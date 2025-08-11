@@ -34,7 +34,7 @@
 
             <div class="button-group">
                 <h:form>
-                    <h:commandButton value="Logout" action="#{authBean.logout}" styleClass="button-red" />
+                    <h:commandButton value="Logout" action="#{providerController.logout}" styleClass="button-red" />
                 </h:form>
                 <h:form>
                     <h:commandButton value="Reset Password" action="#{authBean.resetPassword}" styleClass="button-yellow" />

@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Update Insurance Claim</title>
-    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/UpdateClaim.css" />
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/updateClaim.css" />
 </head>
 <body>
 <f:view>
@@ -53,13 +53,14 @@
 			    <label for="planSelect" class="claim-label">
 			        Select New Plan <span style="color: #dc2626;">*</span>
 			    </label>
-			    <h:selectOneMenu id="planSelect" value="#{claimController.selectedSubscription}" styleClass="claim-input">
+			    <h:selectOneMenu id="planSelect" value="#{claimController.selectedSubscription}" styleClass="claim-input" required="true"
+                 requiredMessage="Please select a valid insurance plan.">
 			        <f:selectItem itemLabel="-- Select Plan --" itemValue="#{null}" />
 			        <f:selectItems value="#{claimController.subscriptions}" var="sub"
 			                       itemLabel="#{sub.coverage.insurancePlan.planName} - #{sub.coverage.insurancePlan.insuranceCompany.companyName} (₹#{sub.remainingCoverageAmount})"
 			                        itemValue="#{sub.subscribeId}" />
 			    </h:selectOneMenu>
-			    <h:message for="planSelect" style="color:red; font-size:12px;" />
+			    <h:message for="planSelect" styleClass="error-message" />
 			</div>
             <div>
                 <h2 class="section-header">Update Claim Amount</h2>
@@ -68,7 +69,7 @@
                 </label>
                 <h:inputText id="amountUpdated" value="#{claimController.amountClaimed}"
                              styleClass="claim-input" />
-				<h:message  for="amountUpdated" style="color:red; font-size:12px;" />           
+				<h:message  for="amountUpdated" styleClass="error-message" />           
 				</div>
 
             <!-- ✅ Submit -->

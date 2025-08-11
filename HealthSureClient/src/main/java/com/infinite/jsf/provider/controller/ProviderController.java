@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import com.infinite.jsf.provider.dao.ProviderDao;
 import com.infinite.jsf.provider.dao.ProviderOtpDao;
@@ -438,13 +439,13 @@ public class ProviderController implements Serializable{
         LoginStatus status = dbProvider.getStatus();
         System.out.println("Provider status: " + status);
 
-        if (status == LoginStatus.PENDING) {
+        if (status == LoginStatus.APPROVED) {
             // store in session
             FacesContext.getCurrentInstance()
                 .getExternalContext()
                 .getSessionMap()
                 .put("loggedInProvider", dbProvider);
-            System.out.println("✔ status PENDING: session updated");
+            System.out.println("✔ status APPROVED: session updated");
 	        System.out.println("provider id is "+dbProvider.getProviderId());
             FacesContext.getCurrentInstance().getExternalContext()
             .getSessionMap().put("providerId", dbProvider.getProviderId());
@@ -453,8 +454,8 @@ public class ProviderController implements Serializable{
             FacesContext.getCurrentInstance().getViewRoot().getChildren().clear();
             return "Provider.jsp?faces-redirect=true";
 
-        } else if (status == LoginStatus.APPROVED) {
-            System.out.println("⚠️ status APPROVED: account not approved yet");
+        } else if (status == LoginStatus.PENDING) {
+            System.out.println("⚠️ status PENDING: account not approved yet");
             FacesContext.getCurrentInstance().addMessage(
                 null,
                 new FacesMessage(
@@ -463,7 +464,7 @@ public class ProviderController implements Serializable{
                     null
                 )
             );
-            return "loginSuccess.jsp?faces-redirect=true";
+            return null;
 
         } else {
             System.out.println("❌ status INACTIVE/LOCKED: login blocked");
@@ -590,6 +591,18 @@ public class ProviderController implements Serializable{
         return "ResetPassword.jsp?faces-redirect=true";
     }
         
+    
+    public String logout() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
+
+        if (session != null) {
+            session.invalidate(); // Ends the session
+        }
+
+        // Redirect to login page
+        return "Login.jsf?faces-redirect=true";
+    }
     
 
        

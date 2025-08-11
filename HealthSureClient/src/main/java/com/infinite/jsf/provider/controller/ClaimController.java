@@ -799,12 +799,20 @@ public class ClaimController {
         history.setDescription("Claim updated by provider.");
         history.setActionDate(new java.util.Date());
         
-        BigDecimal coverageAmount =BigDecimal.valueOf(newSubscribe.getRemainingCoverageAmount());
-	    // Validate required data
+        // Validate required data
+        if (selectedSubscription == null) {
+        	context.addMessage("updation:planSelect", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+        			"Plan Required", "Please select a valid insurance plan."));
+        	return null;
+        }
+        
 	    if (recipient == null || procedure == null || newSubscribe == null || provider == null) {
 	        message = "Missing data for claim submission. Please ensure all steps are completed.";
 	        return null;
 	    }
+	    
+	    BigDecimal coverageAmount =BigDecimal.valueOf(newSubscribe.getRemainingCoverageAmount());
+	    
 	    if (!amountClaimed.matches("^-?\\d+(\\.\\d+)?$")) {
 	        context.addMessage("updation:amountUpdated", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 	                "Invalid Amount", "Please Enter Valid Amount to Claim."));
