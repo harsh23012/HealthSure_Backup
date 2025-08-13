@@ -216,6 +216,12 @@
 	    <managed-bean-class>com.infinite.jsf.contactBean.ContactBean</managed-bean-class>
 	    <managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+      <managed-bean-name>doctorsController</managed-bean-name>
+      <managed-bean-class>com.infinite.jsf.provider.controller.DoctorsController</managed-bean-class>
+      <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
     
 
 </faces-config>

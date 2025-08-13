@@ -43,7 +43,7 @@
 		<mapping
 			resource="com/infinite/jsf/provider/mapping/Claims.hbm.xml" />
 		<mapping
-			resource="com/infinite/jsf/provider/mapping/Doctor.hbm.xml" />
+			resource="com/infinite/jsf/provider/mapping/Doctors.hbm.xml" />
 		<mapping
 			resource="com/infinite/jsf/provider/mapping/MedicalProcedure.hbm.xml" />
 		<mapping

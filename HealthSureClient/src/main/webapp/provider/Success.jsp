@@ -129,7 +129,7 @@
     <i class="fas fa-user-check success-icon"></i>
     <h1>Registration Successful!</h1>
     <p>Thank you for registering. Welcome aboard!</p>
-    <a href="HomePage.jsf" class="btn-home">Go to Home</a>
+    <a href="Provider.jsf" class="btn-home">Go to Home</a>
 
   </div>
 

@@ -18,7 +18,7 @@
             <li><a href="appointments.jsf" class="nav-link">Appointments</a></li>
             <li><a href="patients.jsf" class="nav-link">Patients</a></li>
             <li><a href="ClaimAction.jsf" class="nav-link">Insurance Claim</a></li>
-            <li><a href="services.jsf" class="nav-link">Add Doctors</a></li>
+            <li><a href="AddDoctors.jsf" class="nav-link">Add Doctors</a></li>
         </ul>
 
         <div class="profile-section">

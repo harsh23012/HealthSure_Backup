@@ -28,7 +28,7 @@ public class ProviderFilter implements Filter {
 
 	    boolean isLoginRequest = uri.endsWith("/provider/Login.jsf");
 	    boolean isResourceRequest = uri.contains("javax.faces.resource");
-	    boolean isSignUpRequest = uri.endsWith("/provider/SignUp.jsf") || uri.endsWith("/provider/VerifyOtp.jsf") || uri.endsWith("/provider/GeneratePassword.jsf") || uri.endsWith("/provider/Success.jsf");
+	    boolean isSignUpRequest = uri.endsWith("/provider/SignUp.jsf") || uri.endsWith("/provider/VerifyOtp.jsf") || uri.endsWith("/provider/GeneratePassword.jsf") || uri.endsWith("/provider/Success.jsf") || uri.endsWith("/provider/LoginWithOtp.jsf") ;
 
 	    if (providerUser != null || isLoginRequest || isResourceRequest || isSignUpRequest) {
 	        // Logged in or accessing login/resources: allow
