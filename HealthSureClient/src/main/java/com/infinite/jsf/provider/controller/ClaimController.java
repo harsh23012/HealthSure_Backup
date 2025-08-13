@@ -614,6 +614,12 @@ public class ClaimController {
 	            return null;
 	        }
 	    }
+	    // Validate Procedure ID if provided
+	    if (searchClaimStatus != null && !searchClaimStatus.trim().isEmpty()) {
+	    	searchClaimStatus = searchClaimStatus.trim().toUpperCase();
+	    	hasInput = true;
+	    	return null;
+	    }
 	    // If no input provided, show error
 	    if (!hasInput) {
 	        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
