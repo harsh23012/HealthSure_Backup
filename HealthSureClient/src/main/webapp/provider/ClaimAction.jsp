@@ -32,11 +32,11 @@
                                      styleClass="dashboard-btn" />
 
                     <h:commandButton value="📜 Claims History"
-                                     action="#{claimController.viewClaimHistory}"
+                                     action="SearchClaimHistory.jsf?faces-redirect=true"
                                      styleClass="dashboard-btn" />
 
                     <h:commandButton value="💳 Payment Records"
-                                     action="PaymentPaginations.jsf"
+                                     action="PaymentPaginations.jsf?faces-redirect=true"
                                      styleClass="dashboard-btn" />
                 </div>
             </h:form>

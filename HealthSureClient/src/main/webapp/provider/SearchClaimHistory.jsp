@@ -19,7 +19,7 @@
 body {
 	font-family: 'Segoe UI', sans-serif;
 	background: linear-gradient(to right, #eaf0f6, #f7f9fc);
-	margin: 0;
+	margin-top: 110px;
 	padding: 30px;
 	color: #2c3e50;
 }
@@ -140,6 +140,8 @@ h3 {
 }
 </style>
 </head>
+    <!-- 🌐 Navigation -->
+    <jsp:include page="/navbar/NavProvider.jsp" />
 <body>
 	<div class="header-bar">Search Claim History Portal</div>
 
@@ -506,5 +508,6 @@ h3 {
 		</div>
 	</h:form>
 </body>
+
 	</html>
 </f:view>

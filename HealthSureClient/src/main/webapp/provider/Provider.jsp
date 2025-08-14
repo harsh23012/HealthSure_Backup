@@ -107,13 +107,13 @@
 
             <h:form>
                 <h:commandButton value="💳 Claims History"
-                                 action="#{providerBean.searchPayments}"
+                                 action="SearchClaimHistory.jsf?faces-redirect=true"
                                  styleClass="action-button btn-teal" />
             </h:form>
 
             <h:form>
                 <h:commandButton value="💳 Payment Records"
-                                 action="PaymentPaginations"
+                                 action="PaymentPaginations.jsf?faces-redirect=true"
                                  styleClass="action-button btn-fuchsia" />
             </h:form>
            
