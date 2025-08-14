@@ -6,6 +6,7 @@
 <head>
     <title>Claim Updated</title>
     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/UpdationComplete.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <f:view>

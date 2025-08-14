@@ -7,6 +7,7 @@
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/HealthSureClient/resources/css/admin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="admin-body">

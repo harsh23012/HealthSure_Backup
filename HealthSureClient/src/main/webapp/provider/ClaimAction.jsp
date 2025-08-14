@@ -6,6 +6,9 @@
 <head>
     <title>Insurance Dashboard</title>
     <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/ClaimActions.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    
 </head>
 <body>
 <f:view>
@@ -33,7 +36,7 @@
                                      styleClass="dashboard-btn" />
 
                     <h:commandButton value="💳 Payment Records"
-                                     action="#{claimController.viewPaymentRecords}"
+                                     action="PaymentPaginations.jsf"
                                      styleClass="dashboard-btn" />
                 </div>
             </h:form>

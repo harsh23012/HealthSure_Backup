@@ -223,5 +223,61 @@
       <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     
-
+    <!-- Payment History - Zainab -->
+    
+    <!-- Bean for the model -->
+	<managed-bean>
+		<managed-bean-name>paymentHistory</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.model.PaymentHistory
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+ 
+	<!-- Bean for the DAO -->
+	<managed-bean>
+		<managed-bean-name>paymentHistoryDao</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.daoImpl.PaymentHistoryDaoImpl
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+ 
+	<!-- Controller bean with managed-property injection -->
+	<managed-bean>
+		<managed-bean-name>paymentHistoryController</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.controller.PaymentHistoryController	
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+ 
+		<managed-property>
+			<property-name>payHistoryDao</property-name>
+			<property-class>com.infinite.jsf.provider.daoImpl.PaymentHistoryDaoImpl
+			</property-class>
+			<value>#{paymentHistoryDao}</value>
+		</managed-property>
+ 
+		<managed-property>
+			<property-name>paymentHistory</property-name>
+			<property-class>com.infinite.jsf.provider.model.PaymentHistory
+			</property-class>
+			<value>#{paymentHistory}</value>
+		</managed-property>
+ 
+ 
+		<managed-property>
+			<property-name>recipient</property-name>
+			<property-class>com.infinite.jsf.recipient.model.Recipient
+			</property-class>
+			<value>#{recipient}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>providers</property-name>
+			<property-class>com.infinite.jsf.provider.model.Provider
+ 
+			</property-class>
+			<value>#{provider}</value>
+		</managed-property>
+ 
+	</managed-bean>
+ 
+   
 </faces-config>

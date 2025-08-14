@@ -9,6 +9,8 @@ public class SessionHelper {
     static {
         try {
             Configuration config = new Configuration().configure(); // Loads hibernate.cfg.xml
+            config.setProperty("hibernate.validator.apply_to_ddl", "false");
+			config.setProperty("hibernate.validator.autoregister_listeners", "false");
             sessionFactory = config.buildSessionFactory();
             System.out.println("✅ Hibernate SessionFactory initialized.");
         } catch (Throwable ex) {

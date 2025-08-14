@@ -93,6 +93,11 @@
 			<version>4.3.5.Final</version>
 		</dependency>
 		<dependency>
+		    <groupId>com.fasterxml</groupId>
+		    <artifactId>classmate</artifactId>
+		    <version>1.5.1</version> <!-- Compatible with Hibernate Validator 4.x -->
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.30</version>

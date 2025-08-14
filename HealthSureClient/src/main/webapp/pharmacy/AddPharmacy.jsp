@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <title>Pharmacy Registration</title>
    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/AddPharmacy.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script>
         function validateTermsOnly(event) {

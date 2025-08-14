@@ -57,6 +57,9 @@
 		<mapping
 			resource="com/infinite/jsf/provider/mapping/ProviderOtp.hbm.xml"/>
 		
+		<mapping
+			resource="com/infinite/jsf/provider/mapping/PaymentHistory.hbm.xml"/>
+		
 			
 
 		<!-- Recipient Module -->
