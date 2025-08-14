@@ -60,6 +60,9 @@
 		<mapping
 			resource="com/infinite/jsf/provider/mapping/PaymentHistory.hbm.xml"/>
 		
+		<mapping
+			resource="com/infinite/jsf/provider/mapping/PasswordHistory.hbm.xml"/>
+		
 			
 
 		<!-- Recipient Module -->

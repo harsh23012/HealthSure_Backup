@@ -14,5 +14,6 @@ public interface ProviderDao {
 	boolean updatePasswordByEmail(String emsil, String newPassword) throws Exception;
 	Provider getProviderId(String providerId) throws Exception;
 	Provider findByEmail(String email);
+	String resetPassword(String providerId, String oldPassword, String newPassword);
 
 }
