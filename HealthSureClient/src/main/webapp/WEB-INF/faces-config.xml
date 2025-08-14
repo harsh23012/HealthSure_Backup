@@ -278,6 +278,45 @@
 		</managed-property>
  
 	</managed-bean>
+ 	
+ 	<!-- ClaimHistorySearchController bean with managed-property injection -->
+ 	
+ 	<!-- Bean for the DAO -->
+	<managed-bean>
+		<managed-bean-name>claimHistorySearchDao</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.daoImpl.ClaimHistorySearchDaoImpl
  
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>claimHistory</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.model.ClaimHistory
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+ 
+	<managed-bean>
+		<managed-bean-name>claimHistorySearchController</managed-bean-name>
+		<managed-bean-class>com.infinite.jsf.provider.controller.ClaimHistorySearchController
+		</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+ 
+		<managed-property>
+			<property-name>cleamsHistorySearchDao</property-name>
+			<property-class>com.infinite.jsf.provider.daoImpl.ClaimHistorySearchDaoImpl
+			</property-class>
+			<value>#{claimHistorySearchDao}</value>
+		</managed-property>
+ 
+		<managed-property>
+			<property-name>claimHistory</property-name>
+			<property-class>com.infinite.jsf.provider.model.ClaimHistory
+			</property-class>
+			<value>#{claimHistory}</value>
+ 
+		</managed-property>
+	</managed-bean>
    
 </faces-config>
