@@ -16,6 +16,7 @@ import org.hibernate.cfg.Configuration;
 import com.infinite.jsf.provider.dao.ProviderDao;
 import com.infinite.jsf.provider.model.PasswordHistory;
 import com.infinite.jsf.provider.model.Provider;
+import com.infinite.jsf.provider.model.ProviderDashboardDto;
 import com.infinite.jsf.util.EncryptPassword;
 import com.infinite.jsf.util.SessionHelper;
 
@@ -92,6 +93,52 @@ public class ProviderDaoImpl implements ProviderDao {
 		}
 
 		return provider;
+	}
+	
+	public ProviderDashboardDto getDashboardMetrics(String providerId) {
+	    Session session = null;
+	    ProviderDashboardDto dashboard = new ProviderDashboardDto();
+
+	    try {
+	        session = SessionHelper.getSessionFactory().openSession();
+
+	        // 🗓️ Total Appointments booked this week
+	        Query q1 = session.createQuery(
+	            "SELECT COUNT(a) FROM Appointment a WHERE a.provider.providerId = :pid AND WEEK(a.bookedAt) = WEEK(CURRENT_DATE)");
+	        q1.setParameter("pid", providerId);
+	        dashboard.setTotalAppointments(((Long) q1.uniqueResult()).intValue());
+
+	        // 🧑‍⚕️ Total Patients (distinct recipients with appointments under this provider)
+	        Query q2 = session.createQuery(
+	            "SELECT COUNT(DISTINCT a.recipient.hId) FROM Appointment a WHERE a.provider.providerId = :pid");
+	        q2.setParameter("pid", providerId);
+	        dashboard.setTotalPatients(((Long) q2.uniqueResult()).intValue());
+
+	        // 📄 Total Claims filed this month
+	        Query q3 = session.createQuery(
+	            "SELECT COUNT(c) FROM Claims c WHERE c.provider.providerId = :pid AND MONTH(c.claimDate) = MONTH(CURRENT_DATE)");
+	        q3.setParameter("pid", providerId);
+	        dashboard.setTotalClaims(((Long) q3.uniqueResult()).intValue());
+
+	        // 💰 Total Payments received
+	        Query q4 = session.createQuery(
+	            "SELECT SUM(p.amount) FROM PaymentHistory p WHERE p.provider.providerId = :pid AND p.paymentStatus = 'completed'");
+	        q4.setParameter("pid", providerId);
+	        Double total = (Double) q4.uniqueResult();
+	        dashboard.setTotalAmounts(total != null ? total : 0.0);
+	        System.err.println("total appontments : " + dashboard.getTotalAppointments());
+	        System.err.println("total patients : " + dashboard.getTotalPatients());
+	        System.err.println("total claims : " + dashboard.getTotalClaims());
+	        System.err.println("total amounts : " + dashboard.getTotalAmounts());
+
+	    } catch (Exception e) {
+	        System.err.println("❌ Error fetching dashboard metrics: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null) session.close();
+	    }
+
+	    return dashboard;
 	}
 
 	@Override

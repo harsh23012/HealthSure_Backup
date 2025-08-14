@@ -12,7 +12,7 @@
 
 <body class="center-wrapper">
 <f:view>
-
+	
     <!-- 🌐 Navigation -->
     <jsp:include page="/navbar/NavProvider.jsp" />
 
@@ -30,25 +30,25 @@
 
             <div class="card">
                 <h3 class="card-title" style="color: #3b82f6;">Appointments</h3>
-                <p class="card-value"><h:outputText value="#{providerBean.totalAppointments}" /></p>
+                <p class="card-value"><h:outputText value="#{providerController.totalAppointments}" /></p>
                 <p class="card-note">Scheduled this week</p>
             </div>
 
             <div class="card">
                 <h3 class="card-title" style="color: #10b981;">Patients</h3>
-                <p class="card-value"><h:outputText value="#{providerBean.totalPatients}" /></p>
+                <p class="card-value"><h:outputText value="#{providerController.totalPatients}" /></p>
                 <p class="card-note">Under your care</p>
             </div>
 
             <div class="card">
                 <h3 class="card-title" style="color: #8b5cf6;">Claims</h3>
-                <p class="card-value"><h:outputText value="#{providerBean.totalClaims}" /></p>
+                <p class="card-value"><h:outputText value="#{providerController.totalClaims}" /></p>
                 <p class="card-note">Filed this month</p>
             </div>
 
             <div class="card">
                 <h3 class="card-title" style="color: #ef4444;">Payments</h3>
-                <p class="card-value">₹<h:outputText value="#{providerBean.totalPayments}" /></p>
+                <p class="card-value">₹<h:outputText value="#{providerController.totalAmounts}" /></p>
                 <p class="card-note">Total received</p>
             </div>
 

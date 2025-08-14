@@ -3,6 +3,7 @@ package com.infinite.jsf.provider.dao;
 import java.util.List;
 
 import com.infinite.jsf.provider.model.Provider;
+import com.infinite.jsf.provider.model.ProviderDashboardDto;
 
 public interface ProviderDao {
 	void addProvider(Provider provider) throws Exception;
@@ -15,5 +16,6 @@ public interface ProviderDao {
 	Provider getProviderId(String providerId) throws Exception;
 	Provider findByEmail(String email);
 	String resetPassword(String providerId, String oldPassword, String newPassword);
+	ProviderDashboardDto getDashboardMetrics(String providerId);
 
 }

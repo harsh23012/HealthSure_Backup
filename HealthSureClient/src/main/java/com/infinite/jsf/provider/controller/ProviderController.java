@@ -16,6 +16,7 @@ import com.infinite.jsf.provider.daoImpl.ProviderOtpDaoImpl;
 import com.infinite.jsf.util.EncryptPassword;
 import com.infinite.jsf.provider.model.LoginStatus;
 import com.infinite.jsf.provider.model.Provider;
+import com.infinite.jsf.provider.model.ProviderDashboardDto;
 import com.infinite.jsf.provider.model.ProviderOtp;
 import com.infinite.jsf.provider.model.Reason;
 
@@ -33,6 +34,44 @@ public class ProviderController implements Serializable {
 	private List<Provider> providerList;
 	private ProviderDao providerDaoImpl = new ProviderDaoImpl();
 	private ProviderOtpDao providerOtpDaoImpl = new ProviderOtpDaoImpl();
+	
+	private double totalAmounts;
+	private int totalAppointments;
+	private int totalPatients;
+	private int totalClaims;
+	
+
+	public double getTotalAmounts() {
+		return totalAmounts;
+	}
+
+	public void setTotalAmounts(double totalAmounts) {
+		this.totalAmounts = totalAmounts;
+	}
+
+	public int getTotalAppointments() {
+		return totalAppointments;
+	}
+
+	public void setTotalAppointments(int totalAppointments) {
+		this.totalAppointments = totalAppointments;
+	}
+
+	public int getTotalPatients() {
+		return totalPatients;
+	}
+
+	public void setTotalPatients(int totalPatients) {
+		this.totalPatients = totalPatients;
+	}
+
+	public int getTotalClaims() {
+		return totalClaims;
+	}
+
+	public void setTotalClaims(int totalClaims) {
+		this.totalClaims = totalClaims;
+	}
 
 	public ProviderController() {
 		// Manually initialize DAO implementations
@@ -384,6 +423,7 @@ public class ProviderController implements Serializable {
 			System.out.println("dbprovider : " + dbProvider);
 			this.provider = null;
 			FacesContext.getCurrentInstance().getViewRoot().getChildren().clear();
+			initDashboard();
 			return "Provider.jsp?faces-redirect=true";
 
 		} else if (status == LoginStatus.PENDING) {
@@ -403,6 +443,8 @@ public class ProviderController implements Serializable {
 			FacesContext.getCurrentInstance().getViewRoot().getChildren().clear();
 			return null;
 		}
+		
+		
 
 //        public List<Provider> getProviderList() {
 //            if (providerList == null) {
@@ -507,6 +549,17 @@ public class ProviderController implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("otpVerified", true);
 		otpSent = false; // reset
 		return "ResetPassword.jsp?faces-redirect=true";
+	}
+	
+	public void initDashboard() {
+	    String providerId = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("providerId");
+	    if (providerId != null) {
+	        ProviderDashboardDto dashboard = providerDaoImpl.getDashboardMetrics(providerId);
+	        this.totalAppointments = dashboard.getTotalAppointments();
+	        this.totalPatients = dashboard.getTotalPatients();
+	        this.totalClaims = dashboard.getTotalClaims();
+	        this.totalAmounts = dashboard.getTotalAmounts();
+	    }
 	}
 
 	public String logout() {

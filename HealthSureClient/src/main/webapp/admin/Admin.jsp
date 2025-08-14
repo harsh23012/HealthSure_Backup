@@ -56,11 +56,7 @@
             </h:form>
 
             <h:form>
-                <h:commandButton value="🔎 Search Claims" action="#{adminBean.searchClaims}" styleClass="admin-btn cyan-btn" />
-            </h:form>
-
-            <h:form>
-                <h:commandButton value="⚖️ Process Claims" action="#{adminBean.processClaims}" styleClass="admin-btn lime-btn" />
+                <h:commandButton value="🔎 Search & Process Claims" action="#{adminBean.searchClaims}" styleClass="admin-btn cyan-btn" />
             </h:form>
 
             <h:form>
